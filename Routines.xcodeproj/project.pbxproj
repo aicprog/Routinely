@@ -16,6 +16,7 @@
 		3153CE9E22D85ACE0075A593 /* SubRoutine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3153CE9D22D85ACE0075A593 /* SubRoutine.swift */; };
 		3153CEA222D871770075A593 /* RoutineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3153CEA122D871770075A593 /* RoutineTableViewCell.swift */; };
 		3198698A22D9124700CE1582 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3198698922D9124700CE1582 /* Main.storyboard */; };
+		31F7191022D99B900063F51D /* SubRoutineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F7190F22D99B900063F51D /* SubRoutineTableViewController.swift */; };
 		49995AF493C72E7C1AC064A6 /* Pods_Routines.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 733657F418B0DC7BE0629E85 /* Pods_Routines.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,7 @@
 		3153CE9D22D85ACE0075A593 /* SubRoutine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubRoutine.swift; sourceTree = "<group>"; };
 		3153CEA122D871770075A593 /* RoutineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineTableViewCell.swift; sourceTree = "<group>"; };
 		3198698922D9124700CE1582 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		31F7190F22D99B900063F51D /* SubRoutineTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SubRoutineTableViewController.swift; path = /Users/aicocom/Desktop/IOS/Routines/Routines/Controllers/SubRoutineTableViewController.swift; sourceTree = "<absolute>"; };
 		733657F418B0DC7BE0629E85 /* Pods_Routines.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Routines.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE1639ED5D31347D8AAC48FB /* Pods-Routines.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Routines.debug.xcconfig"; path = "Target Support Files/Pods-Routines/Pods-Routines.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -93,7 +95,8 @@
 			isa = PBXGroup;
 			children = (
 				3153CE9222D858F50075A593 /* RoutinesTableViewController.swift */,
-				3153CEA122D871770075A593 /* RoutineTableViewCell.swift */,
+				31F7190F22D99B900063F51D /* SubRoutineTableViewController.swift */,
+				31F7191122D99E920063F51D /* Custom Subclasses */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -130,6 +133,14 @@
 				3153CE9D22D85ACE0075A593 /* SubRoutine.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		31F7191122D99E920063F51D /* Custom Subclasses */ = {
+			isa = PBXGroup;
+			children = (
+				3153CEA122D871770075A593 /* RoutineTableViewCell.swift */,
+			);
+			path = "Custom Subclasses";
 			sourceTree = "<group>";
 		};
 		5273B1D98216EFA0B26D94CF /* Frameworks */ = {
@@ -257,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3153CEA222D871770075A593 /* RoutineTableViewCell.swift in Sources */,
+				31F7191022D99B900063F51D /* SubRoutineTableViewController.swift in Sources */,
 				3153CE9322D858F50075A593 /* RoutinesTableViewController.swift in Sources */,
 				3153CE8122D858870075A593 /* AppDelegate.swift in Sources */,
 				3153CE9C22D85AB90075A593 /* Routine.swift in Sources */,
