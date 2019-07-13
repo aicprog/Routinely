@@ -71,7 +71,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="qx5-ai-fj2" kind="show" id="pTb-qf-MCq"/>
+                        <segue destination="qx5-ai-fj2" kind="show" identifier="goToSubRoutines" id="pTb-qf-MCq"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FoX-uK-IGw" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -73,7 +73,7 @@ class RoutinesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        performSegue(withIdentifier: "goToSubRoutine", sender: self)
+        performSegue(withIdentifier: "goToSubRoutines", sender: self)
     }
     
     //MARK: - Segue
