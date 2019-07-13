@@ -15,10 +15,10 @@ class RoutinesTableViewController: UITableViewController {
     
     let realm = try! Realm()
     var routines: Results<Routine>?
-   // let cellSpacingHeight: CGFloat = 100
+    // let cellSpacingHeight: CGFloat = 100
     //MARK: - IBoutlets
     
-
+    
     
     
     //MARK: - View Methods
@@ -86,7 +86,7 @@ class RoutinesTableViewController: UITableViewController {
         }
         
     }
-
+    
     //MARK: - IBActions
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -96,7 +96,7 @@ class RoutinesTableViewController: UITableViewController {
         //add New Alert Action
         let alertAction = UIAlertAction(title: "Add", style: .default) { (alert) in
             //create new Item
-             
+            
             if let name = txtField?.text{
                 if !name.trimmingCharacters(in: .whitespaces).isEmpty{
                     let newRoutine = Routine()
@@ -107,7 +107,7 @@ class RoutinesTableViewController: UITableViewController {
                 }
             }
             
-           
+            
         }
         //add textField
         alertController.addTextField { (alertTextField) in
@@ -129,7 +129,7 @@ class RoutinesTableViewController: UITableViewController {
             }
         }
         catch{
-            
+            print("There was an error adding \(error)")
         }
         tableView.reloadData()
     }
@@ -138,6 +138,53 @@ class RoutinesTableViewController: UITableViewController {
         routines = realm.objects(Routine.self)
         tableView.reloadData()
         
+    }
+    
+    func deleteRoutine(with indexPath: IndexPath) -> Bool {
+        
+        if let itemToBeDeleted = routines?[indexPath.row]{
+            do{
+                try realm.write {
+                    realm.delete(itemToBeDeleted)
+                    tableView.reloadData()
+                }
+            }catch{
+                print("There was an error deleting \(error)")
+                return false
+            }
+        }
+         return true
+    }
+
+    
+ 
+    //MARK: SwipeToDelete Methods
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        guard let routine = routines?[indexPath.row] else {fatalError()}
+        
+        //create delete action
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { (action, view, actionPerformed) in
+            
+            //create alert action
+            let alertController = UIAlertController(title: "Delete Routine", message: "Are you sure you want to delete this routine: \(routine.name)?", preferredStyle: .alert)
+            //create action
+            let alertCancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+                actionPerformed(false)
+            }
+            let alertDeleteAction = UIAlertAction(title: "Delete", style: .destructive) { (action) in
+                actionPerformed(self.deleteRoutine(with: indexPath))
+            }
+            
+            alertController.addAction(alertCancelAction)
+            alertController.addAction(alertDeleteAction)
+            
+            self.present(alertController, animated: true, completion: nil)
+      
+        }
+        delete.image =  UIImage(named: "remove")
+        
+        return UISwipeActionsConfiguration(actions: [delete])
     }
     
     
