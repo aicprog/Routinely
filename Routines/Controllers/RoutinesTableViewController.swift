@@ -25,6 +25,8 @@ class RoutinesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -57,8 +59,6 @@ class RoutinesTableViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "routineCell", for: indexPath) as! RoutineTableViewCell
         
-        
-        
         if let routine = routines?[indexPath.row]{
             cell.routineName.text = routine.name
         }
@@ -72,7 +72,7 @@ class RoutinesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+       // tableView.deselectRow(at: indexPath, animated: true)
         performSegue(withIdentifier: "goToSubRoutines", sender: self)
     }
     
@@ -82,10 +82,19 @@ class RoutinesTableViewController: UITableViewController {
         
         if let indexPath = tableView.indexPathForSelectedRow{
             destinationVC.selectedRoutine = routines?[indexPath.row]
-            
+            tableView.deselectRow(at: indexPath, animated: true)
         }
-        
     }
+    //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    //        let destinationVC = segue.destination as! SubRoutineTableViewController
+    //
+    //        if let indexPath = tableView.indexPathForSelectedRow{
+    //            destinationVC.selectedRoutine = routines?[indexPath.row]
+    //
+    //
+    //        }
+    //
+    //    }
     
     //MARK: - IBActions
     
@@ -107,7 +116,6 @@ class RoutinesTableViewController: UITableViewController {
                 }
             }
             
-            
         }
         //add textField
         alertController.addTextField { (alertTextField) in
@@ -117,8 +125,6 @@ class RoutinesTableViewController: UITableViewController {
         //show alert Controller
         alertController.addAction(alertAction)
         present(alertController, animated: true, completion: nil)
-        
-        
     }
     
     //MARK: - Realm Manipulation Methods
@@ -153,11 +159,11 @@ class RoutinesTableViewController: UITableViewController {
                 return false
             }
         }
-         return true
+        return true
     }
-
     
- 
+    
+    
     //MARK: SwipeToDelete Methods
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
@@ -180,7 +186,7 @@ class RoutinesTableViewController: UITableViewController {
             alertController.addAction(alertDeleteAction)
             
             self.present(alertController, animated: true, completion: nil)
-      
+            
         }
         delete.image =  UIImage(named: "remove")
         
