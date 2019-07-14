@@ -19,6 +19,7 @@ class RoutineTableViewCell: UITableViewCell {
     
     @IBOutlet weak var routineName: UILabel!
 
+    @IBOutlet weak var numberOfSubRoutines: UILabel!
     
     
 //    @IBOutlet weak var cellBackground: UIImageView!{

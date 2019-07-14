@@ -25,7 +25,7 @@ class RoutinesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -40,6 +40,8 @@ class RoutinesTableViewController: UITableViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
+        
         let backgroundImage = UIImage(named: "cellBackground3")
         let imageView = UIImageView(image: backgroundImage)
         imageView.contentMode = .scaleAspectFill
@@ -59,10 +61,11 @@ class RoutinesTableViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "routineCell", for: indexPath) as! RoutineTableViewCell
         
+        //update each cell
         if let routine = routines?[indexPath.row]{
             cell.routineName.text = routine.name
+            cell.numberOfSubRoutines.text = "\(routine.numberOfCompletedSubRoutines)/\(routine.numberOfTotalSubRoutines)"
         }
-        
         
         //test
         cell.contentView.backgroundColor = UIColor.clear
@@ -111,7 +114,6 @@ class RoutinesTableViewController: UITableViewController {
                     let newRoutine = Routine()
                     newRoutine.name = txtField?.text ?? "New Routine"
                     self.save(add: newRoutine)
-                    
                     
                 }
             }

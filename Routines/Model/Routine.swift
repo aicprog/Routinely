@@ -13,6 +13,8 @@ class Routine: Object{
     
     @objc dynamic var name: String = ""
     @objc dynamic var completed: Bool = false
+    @objc dynamic var numberOfTotalSubRoutines: Int = 0
+    @objc dynamic var numberOfCompletedSubRoutines: Int = 0
     let subRoutines = List<SubRoutine>()
     
     //@objc dynamic var color: String = UIColor.randomFlat.hexValue()
