@@ -119,6 +119,8 @@ class RoutinesTableViewController: UITableViewController {
             }
             
         }
+        
+        
         //add textField
         alertController.addTextField { (alertTextField) in
             alertTextField.placeholder = "Enter New Routine"
