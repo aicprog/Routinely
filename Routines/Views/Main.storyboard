@@ -122,7 +122,6 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="SubRoutine" id="BgK-H6-t9o" userLabel="SubRoutines">
                         <barButtonItem key="backBarButtonItem" title="Back" id="qNJ-T5-53k"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="IuQ-W9-8wj"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
