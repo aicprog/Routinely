@@ -16,6 +16,7 @@ class Routine: Object{
     @objc dynamic var numberOfTotalSubRoutines: Int = 0
     @objc dynamic var numberOfCompletedSubRoutines: Int = 0
     let subRoutines = List<SubRoutine>()
+    let reminders = List<Reminder>()
     
     //@objc dynamic var color: String = UIColor.randomFlat.hexValue()
     //@objc dynamic var information?

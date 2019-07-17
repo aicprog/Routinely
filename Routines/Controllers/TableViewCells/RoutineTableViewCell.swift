@@ -41,6 +41,8 @@ class RoutineTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    //MARK: Table View Methods
+    
 //    func blurImage(){
 //        
 //        cellBackground.image = UIImage(named: "cellBackground5")
@@ -76,6 +78,9 @@ class RoutineTableViewCell: UITableViewCell {
         cellBackground?.addSubview(blurView)
         cellBackground.alpha = CGFloat(0.7)
         
+        self.accessoryType = .detailButton
+        
+        
     //spacing inbetween cells
     }
     
@@ -90,6 +95,9 @@ class RoutineTableViewCell: UITableViewCell {
             super.frame = frame
         }
     }
+    
+    
+    
     
 
 
