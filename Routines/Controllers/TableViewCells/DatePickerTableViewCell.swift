@@ -10,10 +10,15 @@ import UIKit
 
 class DatePickerTableViewCell: UITableViewCell {
 
+    //MARK: IB Outlets
     @IBOutlet weak var datePicker: UIDatePicker!
     
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var subtitle: UILabel!
+ 
+    
+    //MARK: My variables
+    var doneInputting: (() -> Void)? = nil
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,6 +31,15 @@ class DatePickerTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    //MARK: DatePicker
+    
+    @IBAction func datePickerChanged(_ sender: UIDatePicker) {
+        if let changeDate = self.doneInputting{
+            changeDate()
+        }
+    }
+    
     
 
 }

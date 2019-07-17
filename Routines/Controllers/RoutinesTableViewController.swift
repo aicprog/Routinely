@@ -79,18 +79,31 @@ class RoutinesTableViewController: UITableViewController {
     
     //MARK: - Segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
         if segue.identifier == "goToSubRoutines"{
             let destinationVC = segue.destination as! SubRoutineTableViewController
-            
+
             if let indexPath = tableView.indexPathForSelectedRow{
+                destinationVC.selectedRoutine = routines?[indexPath.row]
+                tableView.deselectRow(at: indexPath, animated: true)
+            }
+        }
+        else if segue.identifier == "goToRoutineDetails"{
+            let destinationVC = segue.destination as! DetailedRoutineTableViewController
+            //print(tableView.indexPath(for: sender as! RoutineTableViewCell)!)
+            if let indexPath = sender as? IndexPath{
                 destinationVC.selectedRoutine = routines?[indexPath.row]
                 tableView.deselectRow(at: indexPath, animated: true)
             }
         }
     }
     
+
+    
+    
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        performSegue(withIdentifier: "goToRoutineDetails", sender: self)
+        performSegue(withIdentifier: "goToRoutineDetails", sender: indexPath)
+        
     }
     
     //MARK: - IBActions

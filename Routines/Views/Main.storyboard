@@ -92,7 +92,7 @@
                     <connections>
                         <outlet property="addTxtField" destination="AVN-JQ-UfK" id="ri8-7a-18s"/>
                         <segue destination="qx5-ai-fj2" kind="show" identifier="goToSubRoutines" id="5ln-ge-yL0"/>
-                        <segue destination="jeC-v9-Z3D" kind="show" identifier="goToRoutineDetails" id="9Dz-zr-Fvw"/>
+                        <segue destination="jeC-v9-Z3D" kind="show" identifier="goToRoutineDetails" id="kfi-up-oBp"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FoX-uK-IGw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -176,12 +176,12 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BSR-ts-OPe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1444" y="553"/>
+            <point key="canvasLocation" x="1444" y="595"/>
         </scene>
-        <!--Add Routine Table View Controller-->
+        <!--Edit Routine-->
         <scene sceneID="g5j-rm-wyS">
             <objects>
-                <tableViewController id="jeC-v9-Z3D" customClass="AddRoutineTableViewController" customModule="Routines" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="jeC-v9-Z3D" customClass="DetailedRoutineTableViewController" customModule="Routines" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="sQ7-4u-0yW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -208,6 +208,16 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="225"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
+                                        <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="dCw-2V-Quh" userLabel="Start Date Picker">
+                                            <rect key="frame" x="8" y="47" width="359" height="150"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <date key="date" timeIntervalSinceReferenceDate="585021036.66138196">
+                                                <!--2019-07-17 01:50:36 +0000-->
+                                            </date>
+                                            <connections>
+                                                <action selector="datePickerChanged:" destination="Pnh-fw-mhf" eventType="valueChanged" id="fYt-bD-33m"/>
+                                            </connections>
+                                        </datePicker>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RmB-Nc-TwM">
                                             <rect key="frame" x="16" y="11" width="146" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -215,20 +225,13 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qth-5l-NM4">
-                                            <rect key="frame" x="300" y="11" width="59" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qth-5l-NM4">
+                                            <rect key="frame" x="204" y="15" width="163" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="dCw-2V-Quh" userLabel="Start Date Picker">
-                                            <rect key="frame" x="8" y="47" width="359" height="150"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                            <date key="date" timeIntervalSinceReferenceDate="585021036.66138196">
-                                                <!--2019-07-17 01:50:36 +0000-->
-                                            </date>
-                                        </datePicker>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
@@ -243,10 +246,19 @@
                             <outlet property="delegate" destination="jeC-v9-Z3D" id="psd-Iy-LRq"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Edit Routine" id="ZN9-mJ-rSz">
+                        <barButtonItem key="backBarButtonItem" title="Cancel" id="agd-hF-Qt0"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="9VK-d9-qcd"/>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="routineName" destination="MUF-bs-ahK" id="ELh-vs-dRy"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lUc-UT-NtF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1444" y="-82.3088455772114"/>
+            <point key="canvasLocation" x="1463" y="-93"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="x4X-sA-TZf">
