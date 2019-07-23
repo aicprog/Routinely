@@ -101,7 +101,7 @@ class RoutinesTableViewController: UITableViewController {
             }
         }
         else if segue.identifier == "goToRoutineDetails"{
-            let destinationVC = segue.destination as! DetailedRoutineTableViewController
+            let destinationVC = segue.destination as! DetailedRoutineViewController
             //print(tableView.indexPath(for: sender as! RoutineTableViewCell)!)
             if let indexPath = sender as? IndexPath{
                 destinationVC.selectedRoutine = routines?[indexPath.row]
