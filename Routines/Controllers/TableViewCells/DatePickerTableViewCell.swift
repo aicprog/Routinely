@@ -15,15 +15,17 @@ class DatePickerTableViewCell: UITableViewCell {
     
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var subtitle: UILabel!
- 
+
     
     //MARK: My variables
     var doneInputting: (() -> Void)? = nil
+
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        datePicker.isHidden = true
+        self.isHidden = true
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -40,6 +42,7 @@ class DatePickerTableViewCell: UITableViewCell {
         }
     }
     
+ 
     
 
 }

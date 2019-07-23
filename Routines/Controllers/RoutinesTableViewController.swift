@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import EventKit
 
 class RoutinesTableViewController: UITableViewController {
     
@@ -18,8 +19,10 @@ class RoutinesTableViewController: UITableViewController {
     // let cellSpacingHeight: CGFloat = 100
     //MARK: - IBoutlets
     
+    
     @IBOutlet weak var addTxtField: UITextField!
     
+
     
     
     //MARK: - View Methods
@@ -28,10 +31,19 @@ class RoutinesTableViewController: UITableViewController {
         
         //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
-        tableView.rowHeight = 100
+        tableView.rowHeight = 105
         tableView.sectionHeaderHeight = CGFloat(200)
+        
+        //load text field
         initializeAddTxtFieldUI()
+        
+    
+        
+        //load items
         loadRoutines()
+    
+        
+        
         
     }
     
@@ -60,7 +72,7 @@ class RoutinesTableViewController: UITableViewController {
         
         //update each cell
         if let routine = routines?[indexPath.row]{
-            cell.routineName.text = routine.name
+            cell.routineName.text = "\(routine.name)"
             cell.numberOfSubRoutines.text = "\(routine.numberOfCompletedSubRoutines)/\(routine.numberOfTotalSubRoutines)"
             
         }
@@ -73,16 +85,16 @@ class RoutinesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       // tableView.deselectRow(at: indexPath, animated: true)
+        // tableView.deselectRow(at: indexPath, animated: true)
         performSegue(withIdentifier: "goToSubRoutines", sender: self)
     }
     
     //MARK: - Segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
+        
         if segue.identifier == "goToSubRoutines"{
             let destinationVC = segue.destination as! SubRoutineTableViewController
-
+            
             if let indexPath = tableView.indexPathForSelectedRow{
                 destinationVC.selectedRoutine = routines?[indexPath.row]
                 tableView.deselectRow(at: indexPath, animated: true)
@@ -98,7 +110,7 @@ class RoutinesTableViewController: UITableViewController {
         }
     }
     
-
+    
     
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
@@ -106,50 +118,51 @@ class RoutinesTableViewController: UITableViewController {
         
     }
     
+    
     //MARK: - IBActions
     
-//    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
-//        var txtField: UITextField?
-//        //add New Alert Controller
-//        let alertController = UIAlertController(title: "Add New Routine", message: "", preferredStyle: .alert)
-//        //add New Alert Action
-//        let alertAction = UIAlertAction(title: "Add", style: .default) { (alert) in
-//            //create new Item
-//            
-//            if let name = txtField?.text{
-//                if !name.trimmingCharacters(in: .whitespaces).isEmpty{
-//                    let newRoutine = Routine()
-//                    newRoutine.name = txtField?.text ?? "New Routine"
-//                    self.save(add: newRoutine)
-//                    
-//                }
-//            }
-//            
-//        }
-//        
-//        
-//        //add textField
-//        alertController.addTextField { (alertTextField) in
-//            alertTextField.placeholder = "Enter New Routine"
-//            txtField = alertTextField
-//        }
-//        //show alert Controller
-//        alertController.addAction(alertAction)
-//        present(alertController, animated: true, completion: nil)
-//    }
+    //    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+    //        var txtField: UITextField?
+    //        //add New Alert Controller
+    //        let alertController = UIAlertController(title: "Add New Routine", message: "", preferredStyle: .alert)
+    //        //add New Alert Action
+    //        let alertAction = UIAlertAction(title: "Add", style: .default) { (alert) in
+    //            //create new Item
+    //
+    //            if let name = txtField?.text{
+    //                if !name.trimmingCharacters(in: .whitespaces).isEmpty{
+    //                    let newRoutine = Routine()
+    //                    newRoutine.name = txtField?.text ?? "New Routine"
+    //                    self.save(add: newRoutine)
+    //
+    //                }
+    //            }
+    //
+    //        }
+    //
+    //
+    //        //add textField
+    //        alertController.addTextField { (alertTextField) in
+    //            alertTextField.placeholder = "Enter New Routine"
+    //            txtField = alertTextField
+    //        }
+    //        //show alert Controller
+    //        alertController.addAction(alertAction)
+    //        present(alertController, animated: true, completion: nil)
+    //    }
     
     //MARK: - Realm Manipulation Methods
-//    func save(add routine: Routine){
-//        do{
-//            try realm.write {
-//                realm.add(routine)
-//            }
-//        }
-//        catch{
-//            print("There was an error adding \(error)")
-//        }
-//        tableView.reloadData()
-//    }
+    //    func save(add routine: Routine){
+    //        do{
+    //            try realm.write {
+    //                realm.add(routine)
+    //            }
+    //        }
+    //        catch{
+    //            print("There was an error adding \(error)")
+    //        }
+    //        tableView.reloadData()
+    //    }
     
     func loadRoutines(){
         routines = realm.objects(Routine.self)
