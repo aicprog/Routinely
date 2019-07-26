@@ -23,6 +23,7 @@ class Routine: Object{
     @objc dynamic var endTime: Date?
     @objc dynamic var reminderSet = false
     @objc dynamic var calendarEventOn = false
+    @objc dynamic var notificationIdentifier: String?
    // @objc dynamic var caldendarEven: [EKEvent]?
     
     

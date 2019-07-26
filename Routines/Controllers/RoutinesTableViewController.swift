@@ -41,6 +41,7 @@ class RoutinesTableViewController: UITableViewController {
         
         //load items
         loadRoutines()
+        testerItem()
     
         
         
@@ -118,51 +119,7 @@ class RoutinesTableViewController: UITableViewController {
         
     }
     
-    
-    //MARK: - IBActions
-    
-    //    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
-    //        var txtField: UITextField?
-    //        //add New Alert Controller
-    //        let alertController = UIAlertController(title: "Add New Routine", message: "", preferredStyle: .alert)
-    //        //add New Alert Action
-    //        let alertAction = UIAlertAction(title: "Add", style: .default) { (alert) in
-    //            //create new Item
-    //
-    //            if let name = txtField?.text{
-    //                if !name.trimmingCharacters(in: .whitespaces).isEmpty{
-    //                    let newRoutine = Routine()
-    //                    newRoutine.name = txtField?.text ?? "New Routine"
-    //                    self.save(add: newRoutine)
-    //
-    //                }
-    //            }
-    //
-    //        }
-    //
-    //
-    //        //add textField
-    //        alertController.addTextField { (alertTextField) in
-    //            alertTextField.placeholder = "Enter New Routine"
-    //            txtField = alertTextField
-    //        }
-    //        //show alert Controller
-    //        alertController.addAction(alertAction)
-    //        present(alertController, animated: true, completion: nil)
-    //    }
-    
-    //MARK: - Realm Manipulation Methods
-    //    func save(add routine: Routine){
-    //        do{
-    //            try realm.write {
-    //                realm.add(routine)
-    //            }
-    //        }
-    //        catch{
-    //            print("There was an error adding \(error)")
-    //        }
-    //        tableView.reloadData()
-    //    }
+
     
     func loadRoutines(){
         routines = realm.objects(Routine.self)
@@ -246,6 +203,7 @@ class RoutinesTableViewController: UITableViewController {
     
 }
 
+
 //MARK: - UITextField Extension
 extension RoutinesTableViewController: UITextFieldDelegate{
     
@@ -282,6 +240,22 @@ extension RoutinesTableViewController: UITextFieldDelegate{
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: addTxtField.frame.size.height))
         addTxtField.leftView = paddingView
         addTxtField.leftViewMode = .always
+    }
+    
+    func testerItem(){
+        do{
+            try self.realm.write {
+                let newRoutine = Routine()
+                newRoutine.name = "Tester"
+                realm.add(newRoutine)
+                //self.selectedRoutine?.numberOfTotalSubRoutines += 1
+            }
+        }
+        catch{
+            print("There was an error adding \(error)")
+        }
+        
+        self.tableView.reloadData()
     }
 }
 
