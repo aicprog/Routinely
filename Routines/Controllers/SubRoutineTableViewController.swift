@@ -229,11 +229,6 @@ class SubRoutineTableViewController: UITableViewController {
     
 }
 
-
-
-
-
-
 //MARK: - UITextField Extension
 extension SubRoutineTableViewController: UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
