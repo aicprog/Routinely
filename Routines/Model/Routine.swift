@@ -18,7 +18,7 @@ class Routine: Object{
     @objc dynamic var numberOfTotalSubRoutines: Int = 0
     @objc dynamic var numberOfCompletedSubRoutines: Int = 0
     
-    
+    @objc dynamic var partialImagePath: String?
     @objc dynamic var startTime: Date?
     @objc dynamic var endTime: Date?
     @objc dynamic var reminderSet = false

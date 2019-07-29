@@ -22,8 +22,6 @@ class RoutinesTableViewController: UITableViewController {
     
     @IBOutlet weak var addTxtField: UITextField!
     
-
-    
     
     //MARK: - View Methods
     override func viewDidLoad() {
@@ -34,6 +32,14 @@ class RoutinesTableViewController: UITableViewController {
         tableView.rowHeight = 105
         tableView.sectionHeaderHeight = CGFloat(200)
         
+        
+        //For background image of cell
+        let backgroundImage = UIImage(named: "cellBackground3")
+        let imageView = UIImageView(image: backgroundImage)
+        imageView.contentMode = .scaleAspectFill
+        self.tableView.backgroundView = imageView
+        
+        
         //load text field
         initializeAddTxtFieldUI()
         
@@ -41,10 +47,11 @@ class RoutinesTableViewController: UITableViewController {
         
         //load items
         loadRoutines()
-        testerItem()
-    
+       // testerItem()
         
         
+        
+
         
     }
     
@@ -52,10 +59,8 @@ class RoutinesTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         tableView.reloadData()
         
-        let backgroundImage = UIImage(named: "cellBackground3")
-        let imageView = UIImageView(image: backgroundImage)
-        imageView.contentMode = .scaleAspectFill
-        self.tableView.backgroundView = imageView
+        //make sure RoutinelyImages Folder is intact
+        createFolder()
         
     }
     
@@ -75,6 +80,15 @@ class RoutinesTableViewController: UITableViewController {
         if let routine = routines?[indexPath.row]{
             cell.routineName.text = "\(routine.name)"
             cell.numberOfSubRoutines.text = "\(routine.numberOfCompletedSubRoutines)/\(routine.numberOfTotalSubRoutines)"
+            
+            if let selectedImagePartialPath = routine.partialImagePath{
+                
+                guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return cell}
+                let selectedFileURL: URL = documentsDirectory.appendingPathComponent(selectedImagePartialPath)
+
+                cell.routineImage.image = UIImage(contentsOfFile: selectedFileURL.absoluteString)
+                
+            }
             
         }
         
@@ -198,6 +212,23 @@ class RoutinesTableViewController: UITableViewController {
         
         // Add attribute
         addTxtField.attributedPlaceholder = placeHolder
+    }
+    
+    //MARK: Functions for saving images
+    func createFolder(){
+        
+        do{
+            let folderName = "RoutinelyImages"
+            let fileManager = FileManager.default
+            let docsUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            let myFolder = docsUrl.appendingPathComponent(folderName)
+            try fileManager.createDirectory(at: myFolder, withIntermediateDirectories: true)
+            
+            print(myFolder.absoluteString)
+        }
+        catch{
+            print("Folder could not save")
+        }
     }
     
     

@@ -21,7 +21,8 @@ class RoutineTableViewCell: UITableViewCell {
 
     @IBOutlet weak var numberOfSubRoutines: UILabel!
     
-    
+    //MARK: - My variables
+    let defaultImageName = "icon0"
 //    @IBOutlet weak var cellBackground: UIImageView!{
 //        didSet{
 //            blurImage()
@@ -31,6 +32,10 @@ class RoutineTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
        
+        //customize image
+        initializeImageProperties()
+        
+        //customize UIView Cell
        customizeUIViewCell()
 
     }
@@ -41,7 +46,6 @@ class RoutineTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    //MARK: Table View Methods
     
 //    func blurImage(){
 //        
@@ -94,6 +98,17 @@ class RoutineTableViewCell: UITableViewCell {
             frame.size.height -= 2 * 3
             super.frame = frame
         }
+    }
+    
+    //MARK: My Functions
+    func initializeImageProperties(){
+        //rounded image
+        routineImage.layer.cornerRadius = routineImage.frame.size.width / 3;
+        routineImage.clipsToBounds = true
+        routineImage.alpha = 0.9
+        
+        routineImage.image = UIImage(named: defaultImageName)
+        
     }
     
     
