@@ -324,7 +324,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
 //
 //
 //    }
-    
+    //
     func updateTimeIntervalCell(with cell: DatePickerTableViewCell) {
         if let interval = timeInterval{
             cell.datePicker.date = interval
