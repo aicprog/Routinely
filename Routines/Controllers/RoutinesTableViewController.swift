@@ -92,34 +92,15 @@ class RoutinesTableViewController: UITableViewController {
                 
             }
             
-            //to get time difference if routine has a reminder on
-            if let startDate = routine.startTime, let endDate = routine.endTime{
-                let cal = Calendar.current
-                let components = cal.dateComponents([.day, .hour, .minute, .second], from: startDate, to: endDate)
-                var difference = ""
-                
-                guard let days = components.day else {return cell}
-                guard let hours = components.hour else {return cell}
-                guard let minutes = components.minute else {return cell}
-                guard let seconds = components.second else {return cell}
-                
-                if days > 0{
-                    difference.append(contentsOf: "\(days) days,")
-                }
-                if hours > 0{
-                    difference.append(contentsOf: " \(hours):")
-                }
-                if minutes > 0{
-                    difference.append(contentsOf: "\(minutes):")
-                }
-                if seconds > 0{
-                    difference.append(contentsOf: "\(seconds)")
-                }
-                cell.timeDifference.text = difference
+            if let timeInterval = routine.time{
+                let units: Set<Calendar.Component> = [.hour, .minute,]
+                let startComponents = NSCalendar.current.dateComponents(units, from: timeInterval)
+                cell.timeDifference.text = "\(startComponents.hour!) hours, \(startComponents.minute!) minutes"
             }
             else{
                 cell.timeDifference.text = ""
             }
+        
             
         }
         

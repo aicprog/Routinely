@@ -16,13 +16,14 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
     var startPickerVisible = false
     var endPickerVisible = false
     let realm = try! Realm()
-    let data = [["Remind Me: ","Start Time", "End Time"]]
+    let data = [["Remind Me: ","Start Time", "How Long"]]
     var selectedRoutine: Routine?
     
     
     //MARK: Variables for datePicker
     var startTime: Date?
-    var endTime: Date?
+    var timeInterval: Date?
+    //var endTime: Date?
     var reminderOn = false
     var userChoosingDate = false
    // var validTimePeriod = false
@@ -140,15 +141,16 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
             //action if switch is toggled
             cell.switchToggled = {
                 self.reminderOn = !self.reminderOn
+                print(self.reminderOn)
                 tableView.reloadData()
             }
+            
             return cell
         }
             //tableView is of type DatePickerTableViewCell
         else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "DatePickerCell", for: indexPath) as! DatePickerTableViewCell
-            
-            
+
             //Only show cells if switch is on
             if reminderOn{
                 cell.isHidden = false
@@ -157,30 +159,31 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
                 if let routine = selectedRoutine {
                     //if cell is startDate
                     if indexPath.row == 1{
-                        startTime = cell.datePicker.date
+                        cell.datePicker.datePickerMode = .time
+                        //startTime = cell.datePicker.date
                         startTime = userChoosingDate ? cell.datePicker.date: routine.startTime ?? Date()
-                        updateStartCell(with: cell)
-                        //if cell is endDate
+                        updateStartTimeCell(with: cell)
+                        
                     }else if indexPath.row == 2{
-                        endTime = cell.datePicker.date
-                        endTime = userChoosingDate ? cell.datePicker.date: routine.endTime ?? Date()
-                        updateEndCell(with: cell)
+                        timeInterval = userChoosingDate ? cell.datePicker.date: routine.time ?? Date()
+                        updateTimeIntervalCell(with: cell)
                     }
-                }
-                //else hide cells if user chooses not to have a reminder
+                    
+                }     //else hide cells if user chooses not to have a reminder
             } else{
                 cell.isHidden = true
             }
             
-            //action for datepicker
-            cell.doneInputting = {
-                let strDate = self.dateFormatter(with: cell.datePicker.date)
-                self.userChoosingDate = true
-                cell.subtitle.text = strDate
-                tableView.reloadData()
-                
-                
-            }
+            //MARK: DO SOMETHING ABOUT THIS
+                //action for datepicker
+                cell.doneInputting = {
+                    //let strDate = self.dateFormatter(with: cell.datePicker.date)
+                    self.userChoosingDate = true
+                   // cell.subtitle.text = strDate
+                    tableView.reloadData()
+                    
+                    
+                }
             cell.title.text = data[indexPath.section][indexPath.row]
             
             return cell
@@ -206,7 +209,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
             
         } else if endPickerVisible && indexPath.row == 2{
             return 125
-            
+
         } else{
             return 44
         }
@@ -227,20 +230,21 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
                 
                 
                 //updates for reminders and notifications
-                if reminderOn && datePickerValidated(){
+                if reminderOn{
                     
+                    routine.time = timeInterval
                     routine.startTime = startTime
                     //print("Start Time: \(startTime)")
                     
-                    routine.endTime = endTime
+                   // routine.endTime = endTime
                     //print("End Time: \(endTime)")
                     routine.reminderSet = true
                     routine.notificationIdentifier = createNotification(with: startTime!)
     
                 }
                 else{
-                    routine.startTime = nil
-                    routine.endTime = nil
+                    routine.time = nil
+                   // routine.endTime = nil
                     routine.reminderSet = false
                     
                 }
@@ -260,9 +264,9 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         
         //let viewController: UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "editRoutine") as! DetailedRoutineViewController
         
-        if datePickerValidated() || !reminderOn{
-            self.dismiss(animated: true, completion: nil)
-        }
+        
+        self.dismiss(animated: true, completion: nil)
+        
         //viewController.dismiss(animated: true)
         
     }
@@ -310,26 +314,37 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         tableView.reloadData()
     }
     
-    func dateFormatter(with date: Date) -> String{
-        
-        let dateFormatter = DateFormatter()
-        
-        dateFormatter.dateStyle = DateFormatter.Style.short
-        dateFormatter.timeStyle = DateFormatter.Style.short
-        
-        return dateFormatter.string(from: date)
-    }
+//    func dateFormatter(with date: Date) -> String{
+//
+//
+////        let dateFormatter = DateFormatter()
+////
+////        dateFormatter.dateStyle = DateFormatter.Style.short
+////        dateFormatter.timeStyle = DateFormatter.Style.short
+//
+//
+//    }
     
-    func updateStartCell(with cell: DatePickerTableViewCell) {
-        if let startDate = startTime{
-            cell.datePicker.date = startDate
-            cell.subtitle.text = dateFormatter(with: startDate)
+    func updateTimeIntervalCell(with cell: DatePickerTableViewCell) {
+        if let interval = timeInterval{
+            cell.datePicker.date = interval
+            
+            let units: Set<Calendar.Component> = [.hour, .minute,]
+            let startComponents = NSCalendar.current.dateComponents(units, from: interval)
+            
+            
+            cell.subtitle.text = "\(startComponents.hour!) hours, \(startComponents.minute!) minutes"
         }
     }
-    func updateEndCell(with cell: DatePickerTableViewCell) {
-        if let endDate = endTime{
-            cell.datePicker.date = endDate
-            cell.subtitle.text = dateFormatter(with: endDate)
+    func updateStartTimeCell(with cell: DatePickerTableViewCell) {
+        if let start = startTime{
+            cell.datePicker.date = start
+            let dateFormatter = DateFormatter()
+           // dateFormatter.dateStyle = DateFormatter.Style.short
+           dateFormatter.timeStyle = DateFormatter.Style.short
+            
+            
+            cell.subtitle.text = dateFormatter.string(from: start)
         }
     }
     
@@ -355,26 +370,26 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         routineName.attributedPlaceholder = placeHolder
     }
     
-    func datePickerValidated() -> Bool {
-        
-        if let startDate = startTime, let endDate = endTime{
-            if reminderOn && endDate < startDate{
-                let alert = UIAlertController(title: "Cannot Save Event", message: "The start date must be before the end date", preferredStyle: .alert)
-                let OKAction = UIAlertAction(title: "OK", style: .default){(action) in
-                    print("I work")
-                    
-                }
-                alert.addAction(OKAction)
-                self.present(alert, animated: true)
-                return false
-            }
-            else{
-                return true
-            }
-        }else{
-            return false
-        }
-    }
+//    func datePickerValidated() -> Bool {
+//
+//        if let startDate = startTime, let endDate = endTime{
+//            if reminderOn && endDate < startDate{
+//                let alert = UIAlertController(title: "Cannot Save Event", message: "The start date must be before the end date", preferredStyle: .alert)
+//                let OKAction = UIAlertAction(title: "OK", style: .default){(action) in
+//                    print("I work")
+//
+//                }
+//                alert.addAction(OKAction)
+//                self.present(alert, animated: true)
+//                return false
+//            }
+//            else{
+//                return true
+//            }
+//        }else{
+//            return false
+//        }
+//    }
 
     
     
