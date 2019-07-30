@@ -81,13 +81,44 @@ class RoutinesTableViewController: UITableViewController {
             cell.routineName.text = "\(routine.name)"
             cell.numberOfSubRoutines.text = "\(routine.numberOfCompletedSubRoutines)/\(routine.numberOfTotalSubRoutines)"
             
+            //To get Path of image associated with routine
             if let selectedImagePartialPath = routine.partialImagePath{
                 
                 guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return cell}
                 let selectedFileURL: URL = documentsDirectory.appendingPathComponent(selectedImagePartialPath)
+                print("Get pic: \(selectedFileURL.absoluteString)")
 
-                cell.routineImage.image = UIImage(contentsOfFile: selectedFileURL.absoluteString)
+                cell.routineImage.image = UIImage(contentsOfFile: selectedFileURL.path)
                 
+            }
+            
+            //to get time difference if routine has a reminder on
+            if let startDate = routine.startTime, let endDate = routine.endTime{
+                let cal = Calendar.current
+                let components = cal.dateComponents([.day, .hour, .minute, .second], from: startDate, to: endDate)
+                var difference = ""
+                
+                guard let days = components.day else {return cell}
+                guard let hours = components.hour else {return cell}
+                guard let minutes = components.minute else {return cell}
+                guard let seconds = components.second else {return cell}
+                
+                if days > 0{
+                    difference.append(contentsOf: "\(days) days,")
+                }
+                if hours > 0{
+                    difference.append(contentsOf: " \(hours):")
+                }
+                if minutes > 0{
+                    difference.append(contentsOf: "\(minutes):")
+                }
+                if seconds > 0{
+                    difference.append(contentsOf: "\(seconds)")
+                }
+                cell.timeDifference.text = difference
+            }
+            else{
+                cell.timeDifference.text = ""
             }
             
         }
@@ -224,7 +255,7 @@ class RoutinesTableViewController: UITableViewController {
             let myFolder = docsUrl.appendingPathComponent(folderName)
             try fileManager.createDirectory(at: myFolder, withIntermediateDirectories: true)
             
-            print(myFolder.absoluteString)
+           // print(myFolder.absoluteString)
         }
         catch{
             print("Folder could not save")

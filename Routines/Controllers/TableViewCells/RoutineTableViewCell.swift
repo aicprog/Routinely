@@ -21,6 +21,7 @@ class RoutineTableViewCell: UITableViewCell {
 
     @IBOutlet weak var numberOfSubRoutines: UILabel!
     
+    @IBOutlet weak var timeDifference: UILabel!
     //MARK: - My variables
     let defaultImageName = "icon0"
 //    @IBOutlet weak var cellBackground: UIImageView!{
@@ -103,7 +104,7 @@ class RoutineTableViewCell: UITableViewCell {
     //MARK: My Functions
     func initializeImageProperties(){
         //rounded image
-        routineImage.layer.cornerRadius = routineImage.frame.size.width / 3;
+        routineImage.layer.cornerRadius = routineImage.frame.size.width / 4;
         routineImage.clipsToBounds = true
         routineImage.alpha = 0.9
         

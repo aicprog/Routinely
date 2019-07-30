@@ -21,10 +21,11 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
     
     
     //MARK: Variables for datePicker
-    var startTime = Date()
-    var endTime = Date()
+    var startTime: Date?
+    var endTime: Date?
     var reminderOn = false
     var userChoosingDate = false
+   // var validTimePeriod = false
     
     //MARK: Variables for setting up icons
     var pickerController = UIImagePickerController()
@@ -73,6 +74,15 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         if let routine = selectedRoutine{
             routineName?.text = routine.name
             reminderOn = routine.reminderSet
+            
+            if let imagePath = routine.partialImagePath{
+                guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {return}
+                
+                //for old image path
+                let fileURL: URL = documentsDirectory.appendingPathComponent(imagePath)
+                
+                selectedImageView.image = UIImage(contentsOfFile: fileURL.path)
+            }
    
         }
         
@@ -207,21 +217,25 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
     
     @IBAction func doneButtonPressed(_ sender: UIBarButtonItem) {
         
+        
         guard let routine = selectedRoutine else {fatalError()}
         
         //var succcesful = false
-        
+    
         do{
             try realm.write {
+                
+                
                 //updates for reminders and notifications
-                if reminderOn{
+                if reminderOn && datePickerValidated(){
+                    
                     routine.startTime = startTime
-                    print("Start Time: \(startTime)")
+                    //print("Start Time: \(startTime)")
                     
                     routine.endTime = endTime
-                    print("End Time: \(endTime)")
+                    //print("End Time: \(endTime)")
                     routine.reminderSet = true
-                    routine.notificationIdentifier = createNotification(with: startTime)
+                    routine.notificationIdentifier = createNotification(with: startTime!)
     
                 }
                 else{
@@ -235,6 +249,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
                     routine.partialImagePath = saveImage(previousPartialPath:routine.partialImagePath, image: image)
                     print(routine.partialImagePath!)
                 }
+                
             }
            
             
@@ -242,7 +257,13 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         catch{
             print("There was an error adding \(error)")
         }
-         self.dismiss(animated: true)
+        
+        //let viewController: UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "editRoutine") as! DetailedRoutineViewController
+        
+        if datePickerValidated() || !reminderOn{
+            self.dismiss(animated: true, completion: nil)
+        }
+        //viewController.dismiss(animated: true)
         
     }
     
@@ -271,8 +292,6 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         present(pickerController, animated: true, completion: nil)
     }
     
-    @IBAction func photoButtonTapped(_ sender: UIButton) {
-    }
     
     
     
@@ -302,12 +321,16 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func updateStartCell(with cell: DatePickerTableViewCell) {
-        cell.datePicker.date = startTime
-        cell.subtitle.text = dateFormatter(with: startTime)
+        if let startDate = startTime{
+            cell.datePicker.date = startDate
+            cell.subtitle.text = dateFormatter(with: startDate)
+        }
     }
     func updateEndCell(with cell: DatePickerTableViewCell) {
-        cell.datePicker.date = endTime
-        cell.subtitle.text = dateFormatter(with: endTime)
+        if let endDate = endTime{
+            cell.datePicker.date = endDate
+            cell.subtitle.text = dateFormatter(with: endDate)
+        }
     }
     
     func initializeRoutineNameTxtField(){
@@ -331,6 +354,28 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         // Add attribute
         routineName.attributedPlaceholder = placeHolder
     }
+    
+    func datePickerValidated() -> Bool {
+        
+        if let startDate = startTime, let endDate = endTime{
+            if reminderOn && endDate < startDate{
+                let alert = UIAlertController(title: "Cannot Save Event", message: "The start date must be before the end date", preferredStyle: .alert)
+                let OKAction = UIAlertAction(title: "OK", style: .default){(action) in
+                    print("I work")
+                    
+                }
+                alert.addAction(OKAction)
+                self.present(alert, animated: true)
+                return false
+            }
+            else{
+                return true
+            }
+        }else{
+            return false
+        }
+    }
+
     
     
 
@@ -364,8 +409,8 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         
         
         let unitFlags: Set<Calendar.Component> = [.year, .month, .day, .hour, .minute, .second]
-        let startComponents = NSCalendar.current.dateComponents(unitFlags, from: startDate.addingTimeInterval(20))
-        print(startComponents)
+        let startComponents = NSCalendar.current.dateComponents(unitFlags, from: startDate)
+        //print(startComponents)
         
         
         // Create the trigger as a repeating event.
@@ -407,7 +452,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
             
             //for old image path
             let oldFileURL: URL = documentsDirectory.appendingPathComponent(oldPartialPath)
-            print("Previous \(oldFileURL.absoluteString)")
+            //print("Previous \(oldFileURL.absoluteString)")
             
             //Checks if file exists, removes it if so.
             if FileManager.default.fileExists(atPath: oldFileURL.path) {
@@ -423,12 +468,12 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
 
         //for new image Path
         let uniqueIdentifier = UUID().uuidString
-        let partialPath = "RoutinelyImages/icon\(uniqueIdentifier)"
+        let partialPath = "RoutinelyImages/icon\(uniqueIdentifier).png"
         let newFileURL = documentsDirectory.appendingPathComponent(partialPath)
         guard let data = image.pngData() else {return nil}
         //    .jpegData(compressionQuality: 1) else { return nil}
         
-        print("New: \(newFileURL.absoluteString)")
+        //print("New: \(newFileURL.absoluteString)")
         
         do {
             try data.write(to: newFileURL)
