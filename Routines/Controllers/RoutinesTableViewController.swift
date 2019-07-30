@@ -98,7 +98,7 @@ class RoutinesTableViewController: UITableViewController {
                 cell.timeDifference.text = "\(startComponents.hour!) hours, \(startComponents.minute!) minutes"
             }
             else{
-                cell.timeDifference.text = ""
+                cell.timeDifference.text = " "
             }
         
             
