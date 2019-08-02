@@ -16,6 +16,8 @@ class RoutinesTableViewController: UITableViewController {
     
     let realm = try! Realm()
     var routines: Results<Routine>?
+    var activityIndicator = UIActivityIndicatorView()
+    let defaultImageName = "icon0"
     // let cellSpacingHeight: CGFloat = 100
     //MARK: - IBoutlets
     
@@ -49,10 +51,6 @@ class RoutinesTableViewController: UITableViewController {
         loadRoutines()
        // testerItem()
         
-        
-        
-
-        
     }
     
     
@@ -82,23 +80,26 @@ class RoutinesTableViewController: UITableViewController {
             cell.numberOfSubRoutines.text = "\(routine.numberOfCompletedSubRoutines)/\(routine.numberOfTotalSubRoutines)"
             
             //To get Path of image associated with routine
+            let img = UIImage(named:defaultImageName)
             if let selectedImagePartialPath = routine.partialImagePath{
                 
+                print("I have an image")
                 guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return cell}
                 let selectedFileURL: URL = documentsDirectory.appendingPathComponent(selectedImagePartialPath)
                 print("Get pic: \(selectedFileURL.absoluteString)")
-
                 cell.routineImage.image = UIImage(contentsOfFile: selectedFileURL.path)
                 
+            }else if img != nil {
+                cell.routineImage.image = img
             }
             
-            if let timeInterval = routine.time{
-                let units: Set<Calendar.Component> = [.hour, .minute,]
-                let startComponents = NSCalendar.current.dateComponents(units, from: timeInterval)
-                cell.timeDifference.text = "\(startComponents.hour!) hours, \(startComponents.minute!) minutes"
+            if let startTime = routine.startTime{
+                let dateFormatter = DateFormatter()
+                dateFormatter.timeStyle = DateFormatter.Style.short
+                cell.timeDifference.text = dateFormatter.string(from: startTime)
             }
             else{
-                cell.timeDifference.text = " "
+                cell.timeDifference.text = ""
             }
         
             
@@ -141,7 +142,13 @@ class RoutinesTableViewController: UITableViewController {
     
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.style = UIActivityIndicatorView.Style.gray
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
         performSegue(withIdentifier: "goToRoutineDetails", sender: indexPath)
+        activityIndicator.stopAnimating()
         
     }
     
@@ -198,6 +205,7 @@ class RoutinesTableViewController: UITableViewController {
         delete.image =  UIImage(named: "remove")
         
         return UISwipeActionsConfiguration(actions: [delete])
+        
     }
     
     
@@ -236,7 +244,7 @@ class RoutinesTableViewController: UITableViewController {
             let myFolder = docsUrl.appendingPathComponent(folderName)
             try fileManager.createDirectory(at: myFolder, withIntermediateDirectories: true)
             
-           // print(myFolder.absoluteString)
+           print(myFolder.absoluteString)
         }
         catch{
             print("Folder could not save")
@@ -264,6 +272,7 @@ extension RoutinesTableViewController: UITextFieldDelegate{
                     try self.realm.write {
                         let newRoutine = Routine()
                         newRoutine.name = name
+                        newRoutine.partialImagePath = nil
                         realm.add(newRoutine)
                         //self.selectedRoutine?.numberOfTotalSubRoutines += 1
                         addTxtField.text = ""
@@ -285,20 +294,6 @@ extension RoutinesTableViewController: UITextFieldDelegate{
         addTxtField.leftViewMode = .always
     }
     
-    func testerItem(){
-        do{
-            try self.realm.write {
-                let newRoutine = Routine()
-                newRoutine.name = "Tester"
-                realm.add(newRoutine)
-                //self.selectedRoutine?.numberOfTotalSubRoutines += 1
-            }
-        }
-        catch{
-            print("There was an error adding \(error)")
-        }
-        
-        self.tableView.reloadData()
-    }
+
 }
 

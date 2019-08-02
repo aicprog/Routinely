@@ -19,13 +19,12 @@ class Routine: Object{
     @objc dynamic var numberOfCompletedSubRoutines: Int = 0
     
     @objc dynamic var partialImagePath: String?
-    @objc dynamic var time: Date?
+    @objc dynamic var timeForRoutine: Date?
     @objc dynamic var startTime: Date?
-    //@objc dynamic var endTime: Date?
-    @objc dynamic var reminderSet = false
-    //@objc dynamic var calendarEventOn = false
     @objc dynamic var notificationIdentifier: String?
-   // @objc dynamic var caldendarEven: [EKEvent]?
+    @objc dynamic var reminderSet = false
+
+
     
     
     let subRoutines = List<SubRoutine>()

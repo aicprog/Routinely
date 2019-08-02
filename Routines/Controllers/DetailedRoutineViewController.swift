@@ -59,6 +59,9 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         UIImage(named: "icon25")!
     ]
     
+    //MARK: Variables for Timer
+   // var time
+    
     //MARK: - IBOutlets
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var routineName: UITextField!
@@ -67,6 +70,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet weak var selectedImageView: UIImageView!
     
     @IBOutlet weak var libraryImageButton: UIButton!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,6 +98,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         
         //initialize UI TextField
         initializeRoutineNameTxtField()
+        self.setupHideKeyboardOnTap()
         
         
         //set pickerController delegate
@@ -105,10 +110,9 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         libraryImageButton.alpha = 0.9
         
           //initialize roundness property for selected image view
-        selectedImageView.layer.cornerRadius = selectedImageView.frame.size.width / 4;
+        selectedImageView.layer.cornerRadius = selectedImageView.frame.size.width / 6;
         selectedImageView.clipsToBounds = true
         selectedImageView.alpha = 0.9
-        
         
       
     }
@@ -165,7 +169,13 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
                         updateStartTimeCell(with: cell)
                         
                     }else if indexPath.row == 2{
-                        timeInterval = userChoosingDate ? cell.datePicker.date: routine.time ?? Date()
+                        let units: Set<Calendar.Component> = [.hour, .minute]
+                        var startComponents = NSCalendar.current.dateComponents(units, from: Date())
+                        startComponents.hour = 0
+                        startComponents.minute = 1
+                        let date = Calendar.current.date(from: startComponents)
+                        //print(startComponents.date!)
+                        timeInterval = userChoosingDate ? cell.datePicker.date: routine.timeForRoutine ?? date
                         updateTimeIntervalCell(with: cell)
                     }
                     
@@ -177,9 +187,9 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
             //MARK: DO SOMETHING ABOUT THIS
                 //action for datepicker
                 cell.doneInputting = {
-                    //let strDate = self.dateFormatter(with: cell.datePicker.date)
+                   // let strDate = self.dateFormatter(with: cell.datePicker.date)
                     self.userChoosingDate = true
-                   // cell.subtitle.text = strDate
+                   cell.subtitle.text = "Hello"
                     tableView.reloadData()
                     
                     
@@ -232,26 +242,33 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
                 //updates for reminders and notifications
                 if reminderOn{
                     
-                    routine.time = timeInterval
+                    routine.timeForRoutine = timeInterval
                     routine.startTime = startTime
-                    //print("Start Time: \(startTime)")
-                    
-                   // routine.endTime = endTime
-                    //print("End Time: \(endTime)")
                     routine.reminderSet = true
-                    routine.notificationIdentifier = createNotification(with: startTime!)
+                    routine.notificationIdentifier = createNotification(startTime: routine.startTime!, intervalTime: routine.timeForRoutine!)
     
                 }
                 else{
-                    routine.time = nil
-                   // routine.endTime = nil
+                    routine.timeForRoutine = nil
                     routine.reminderSet = false
+                    routine.startTime = nil
+                    if let notificationIdentifier = routine.notificationIdentifier{
+                        deleteNotification(with: notificationIdentifier)
+                        print("Notification Deleted")
+                    }
+                    routine.notificationIdentifier = nil
                     
                 }
                 //updates for selectedImage
                 if let image = selectedImage {
                     routine.partialImagePath = saveImage(previousPartialPath:routine.partialImagePath, image: image)
                     print(routine.partialImagePath!)
+                }
+                
+                if let name = routineName?.text{
+                    if !name.trimmingCharacters(in: .whitespaces).isEmpty{
+                        routine.name = name
+                    }
                 }
                 
             }
@@ -313,27 +330,16 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         endPickerVisible = !endPickerVisible
         tableView.reloadData()
     }
-    
-//    func dateFormatter(with date: Date) -> String{
-//
-//
-////        let dateFormatter = DateFormatter()
-////
-////        dateFormatter.dateStyle = DateFormatter.Style.short
-////        dateFormatter.timeStyle = DateFormatter.Style.short
-//
-//
-//    }
-    //
+
     func updateTimeIntervalCell(with cell: DatePickerTableViewCell) {
         if let interval = timeInterval{
             cell.datePicker.date = interval
             
             let units: Set<Calendar.Component> = [.hour, .minute,]
-            let startComponents = NSCalendar.current.dateComponents(units, from: interval)
+            let intervalComponents = NSCalendar.current.dateComponents(units, from: interval)
             
             
-            cell.subtitle.text = "\(startComponents.hour!) hours, \(startComponents.minute!) minutes"
+            cell.subtitle.text = "\(intervalComponents.hour!) hours, \(intervalComponents.minute!) minutes"
         }
     }
     func updateStartTimeCell(with cell: DatePickerTableViewCell) {
@@ -358,7 +364,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         
         //custom placeholder for txt field
         var placeHolder = NSMutableAttributedString()
-        let name  = "  + Enter Routine Name"
+        let name  = "  Enter Routine Name"
         
         // Set the Font
         placeHolder = NSMutableAttributedString(string: name, attributes: [NSAttributedString.Key.font:UIFont(name: "Helvetica", size: 15.0)!])
@@ -369,29 +375,6 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         // Add attribute
         routineName.attributedPlaceholder = placeHolder
     }
-    
-//    func datePickerValidated() -> Bool {
-//
-//        if let startDate = startTime, let endDate = endTime{
-//            if reminderOn && endDate < startDate{
-//                let alert = UIAlertController(title: "Cannot Save Event", message: "The start date must be before the end date", preferredStyle: .alert)
-//                let OKAction = UIAlertAction(title: "OK", style: .default){(action) in
-//                    print("I work")
-//
-//                }
-//                alert.addAction(OKAction)
-//                self.present(alert, animated: true)
-//                return false
-//            }
-//            else{
-//                return true
-//            }
-//        }else{
-//            return false
-//        }
-//    }
-
-    
     
 
     
@@ -413,20 +396,43 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    func createNotification(with startDate: Date) -> String {
+    func createNotification(startTime: Date, intervalTime: Date) -> String {
         
         guard let routine = selectedRoutine else {fatalError()}
+        //guard let routineTimeInterval = routine.time else {fatalError()}
+        
+        //for interval
+        let units: Set<Calendar.Component> = [.hour, .minute,]
+        let intervalComponents = NSCalendar.current.dateComponents(units, from: intervalTime)
+        
+        guard let hours = intervalComponents.hour else {fatalError()}
+        guard let minutes = intervalComponents.minute else {fatalError()}
+        
+        var timeIntervalString = ""
+        
+        if hours > 0{
+            if hours == 1{
+                timeIntervalString.append("\(hours) hour and ")
+            }else{
+                timeIntervalString.append("\(hours) hours and ")
+            }
+            
+        }
+        if minutes > 0{
+            if minutes == 1{
+                timeIntervalString.append("\(minutes) minute")
+            }else{
+                timeIntervalString.append("\(minutes) minutes")
+            }
+            
+        }
         
         let content = UNMutableNotificationContent()
         content.title = routine.name
-        content.body = "Every Tuesday at \(startDate)"
+        content.body = "Your routine is starting! You have \(timeIntervalString) for this routine."
         content.sound = UNNotificationSound.default
-        
-        
-        let unitFlags: Set<Calendar.Component> = [.year, .month, .day, .hour, .minute, .second]
-        let startComponents = NSCalendar.current.dateComponents(unitFlags, from: startDate)
-        //print(startComponents)
-        
+
+        let startComponents = NSCalendar.current.dateComponents(units, from: startTime)
         
         // Create the trigger as a repeating event.
         let trigger = UNCalendarNotificationTrigger(
@@ -457,6 +463,13 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         print(uniqueIdentifier)
         return uniqueIdentifier
     }
+    
+    func deleteNotification(with notificationIdentifier: String){
+         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        
+      
+    }
     //MARK: - Functions for saving images
     
     func saveImage(previousPartialPath: String?, image: UIImage) -> String? {
@@ -485,8 +498,11 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         let uniqueIdentifier = UUID().uuidString
         let partialPath = "RoutinelyImages/icon\(uniqueIdentifier).png"
         let newFileURL = documentsDirectory.appendingPathComponent(partialPath)
-        guard let data = image.pngData() else {return nil}
+        guard let data = UIImage.PNGRepresentation(image) else {return nil}
+        //image.pngData() else {return nil}
+        print(data)
         //    .jpegData(compressionQuality: 1) else { return nil}
+        
         
         //print("New: \(newFileURL.absoluteString)")
         
@@ -496,21 +512,9 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
             print("error saving file with error", error)
         }
         
-//        if let routine = selectedRoutine{
-//            do{
-//                try realm.write {
-//                    routine.partialImagePath = partialPath
-//                }
-//            }
-//            catch{
-//
-//            }
-//        }
-        
         return partialPath
         
     }
-
     
 }
 // MARK: - UNUserNotificationCenter Extension Methods
@@ -536,7 +540,10 @@ extension DetailedRoutineViewController: UNUserNotificationCenterDelegate{
 //MARK: - TextField Extension Methods
 extension DetailedRoutineViewController : UITextFieldDelegate{
     
-
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
     
     func setLeftPaddingPoints(_ amount:CGFloat){
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: routineName.frame.size.height))
@@ -598,6 +605,8 @@ extension DetailedRoutineViewController: UIImagePickerControllerDelegate, UINavi
         // selectedImageName = fileUrl.lastPathComponent
     
 }
+    
+    
 
 
 

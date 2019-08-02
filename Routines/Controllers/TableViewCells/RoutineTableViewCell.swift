@@ -104,11 +104,16 @@ class RoutineTableViewCell: UITableViewCell {
     //MARK: My Functions
     func initializeImageProperties(){
         //rounded image
-        routineImage.layer.cornerRadius = routineImage.frame.size.width / 4;
+        routineImage.layer.cornerRadius = routineImage.frame.size.width / 6;
         routineImage.clipsToBounds = true
         routineImage.alpha = 0.9
         
+
         routineImage.image = UIImage(named: defaultImageName)
+       
+        //routineImage.image = UIImage(cgImage: routineImage.image!.cgImage!, scale: routineImage.image!.scale, orientation: .up)
+        
+       
         
     }
     
