@@ -16,7 +16,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
     var startPickerVisible = false
     var endPickerVisible = false
     let realm = try! Realm()
-    let data = [["Remind Me: ","Start Time", "How Long"]]
+    let data = [["Remind Me: ","Start Time", "How Long", "Repeat"]]
     var selectedRoutine: Routine?
     
     
