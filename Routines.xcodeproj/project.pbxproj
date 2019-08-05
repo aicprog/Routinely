@@ -17,6 +17,7 @@
 		3153CE9922D8597D0075A593 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 3153CE9822D8597D0075A593 /* .gitignore */; };
 		3153CE9C22D85AB90075A593 /* Routine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3153CE9B22D85AB90075A593 /* Routine.swift */; };
 		3153CE9E22D85ACE0075A593 /* SubRoutine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3153CE9D22D85ACE0075A593 /* SubRoutine.swift */; };
+		31899BBF22F7CDF100199ED2 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31899BBE22F7CDF100199ED2 /* Notification.swift */; };
 		3198698A22D9124700CE1582 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3198698922D9124700CE1582 /* Main.storyboard */; };
 		31A434CC22D9B4390092D1AE /* SubRoutineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A434CB22D9B4390092D1AE /* SubRoutineTableViewController.swift */; };
 		31A434D022D9B5480092D1AE /* RoutineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A434CF22D9B5480092D1AE /* RoutineTableViewCell.swift */; };
@@ -42,6 +43,7 @@
 		3153CE9822D8597D0075A593 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		3153CE9B22D85AB90075A593 /* Routine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routine.swift; sourceTree = "<group>"; };
 		3153CE9D22D85ACE0075A593 /* SubRoutine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubRoutine.swift; sourceTree = "<group>"; };
+		31899BBE22F7CDF100199ED2 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		3198698922D9124700CE1582 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		31A434CB22D9B4390092D1AE /* SubRoutineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SubRoutineTableViewController.swift; path = ../../../../Routines/Routines/Routines/Controllers/SubRoutineTableViewController.swift; sourceTree = "<group>"; };
 		31A434CF22D9B5480092D1AE /* RoutineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineTableViewCell.swift; sourceTree = "<group>"; };
@@ -109,7 +111,6 @@
 				3153CE9A22D859970075A593 /* Model */,
 				3153CE9622D8591E0075A593 /* Views */,
 				3153CE9422D858FB0075A593 /* Controllers */,
-				310BC6DE22EAD6140052405B /* CollectionViewCells */,
 				3153CE8C22D858890075A593 /* Info.plist */,
 				3153CE9522D8590D0075A593 /* Supporting Files */,
 			);
@@ -122,10 +123,9 @@
 				314283CC22E6BFB40019694C /* DetailedRoutineViewController.swift */,
 				3153CE9222D858F50075A593 /* RoutinesTableViewController.swift */,
 				31A434CB22D9B4390092D1AE /* SubRoutineTableViewController.swift */,
-				314283CA22E6B07F0019694C /* UIViewExtensions.swift */,
-				31CCE6DB22F40EB200B6023B /* UIViewControllerExtension.swift */,
-				31CCE6D922F3C7CC00B6023B /* UIImageExtension.swift */,
+				31899BBD22F4A34700199ED2 /* Extensions */,
 				31A434D522DD217B0092D1AE /* TableViewCells */,
+				310BC6DE22EAD6140052405B /* CollectionViewCells */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -159,9 +159,20 @@
 			isa = PBXGroup;
 			children = (
 				3153CE9B22D85AB90075A593 /* Routine.swift */,
+				31899BBE22F7CDF100199ED2 /* Notification.swift */,
 				3153CE9D22D85ACE0075A593 /* SubRoutine.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		31899BBD22F4A34700199ED2 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				314283CA22E6B07F0019694C /* UIViewExtensions.swift */,
+				31CCE6DB22F40EB200B6023B /* UIViewControllerExtension.swift */,
+				31CCE6D922F3C7CC00B6023B /* UIImageExtension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		31A434D522DD217B0092D1AE /* TableViewCells */ = {
@@ -315,6 +326,7 @@
 				31CCE6DA22F3C7CC00B6023B /* UIImageExtension.swift in Sources */,
 				31A434D022D9B5480092D1AE /* RoutineTableViewCell.swift in Sources */,
 				3153CE9E22D85ACE0075A593 /* SubRoutine.swift in Sources */,
+				31899BBF22F7CDF100199ED2 /* Notification.swift in Sources */,
 				314283CB22E6B07F0019694C /* UIViewExtensions.swift in Sources */,
 				31CCE6DC22F40EB200B6023B /* UIViewControllerExtension.swift in Sources */,
 				31F0FF9F22DEB631005861EA /* DatePickerTableViewCell.swift in Sources */,

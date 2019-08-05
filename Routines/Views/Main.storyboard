@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Routines-->
+        <!--Routinely-->
         <scene sceneID="Ava-wv-NLf">
             <objects>
                 <tableViewController id="Ju7-Eg-Xn0" customClass="RoutinesTableViewController" customModule="Routines" customModuleProvider="target" sceneMemberID="viewController">
@@ -88,7 +88,7 @@
                             <outlet property="delegate" destination="Ju7-Eg-Xn0" id="5TQ-fs-nd8"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Routines" id="Khw-nG-taf">
+                    <navigationItem key="navigationItem" title="Routinely" id="Khw-nG-taf">
                         <barButtonItem key="backBarButtonItem" title="Back" id="sbh-7g-WEx"/>
                     </navigationItem>
                     <connections>
@@ -127,11 +127,11 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="checked" translatesAutoresizingMaskIntoConstraints="NO" id="faJ-yQ-Sv7" userLabel="checkImage">
-                                            <rect key="frame" x="20" y="5" width="40" height="40"/>
+                                            <rect key="frame" x="20" y="3" width="40" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                         <button contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b5v-Kx-Qk2" userLabel="checkButton">
-                                            <rect key="frame" x="20" y="5" width="40" height="40"/>
+                                            <rect key="frame" x="20" y="3" width="40" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <connections>
                                                 <action selector="checkButtonPressed:" destination="kLi-cI-T5A" eventType="touchUpInside" id="Agq-jJ-aQI"/>
@@ -170,6 +170,11 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="SubRoutine" id="BgK-H6-t9o" userLabel="SubRoutines">
                         <barButtonItem key="backBarButtonItem" title="Back" id="qNJ-T5-53k"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="faM-31-Ttf">
+                            <connections>
+                                <action selector="editButtonPressed:" destination="qx5-ai-fj2" id="haG-tq-pST"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -185,14 +190,14 @@
             <objects>
                 <viewController storyboardIdentifier="editRoutine" title="Edit Routine" id="yBc-CP-55E" userLabel="Detailed Routine " customClass="DetailedRoutineViewController" customModule="Routines" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vKQ-6Z-Dre">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="1000"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="1100"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lhc-AY-LJa">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="1000"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="1100"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gvg-VS-yiV">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1000"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1100"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Avf-1M-yJs" userLabel="Header View">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
@@ -322,7 +327,7 @@
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="aTY-Ys-kTS">
-                                                <rect key="frame" x="0.0" y="600" width="375" height="334"/>
+                                                <rect key="frame" x="0.0" y="598" width="375" height="360"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="sectionIndexBackgroundColor" red="0.80784313730000001" green="0.73333333329999995" blue="0.74117647060000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -356,11 +361,11 @@
                                                             <outlet property="routineName" destination="tiE-uA-fKV" id="fRm-oT-iT0"/>
                                                         </connections>
                                                     </tableViewCell>
-                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DatePickerCell" rowHeight="143" id="Pnh-fw-mhf" customClass="DatePickerTableViewCell" customModule="Routines" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="72" width="375" height="143"/>
+                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DatePickerCell" rowHeight="151" id="Pnh-fw-mhf" customClass="DatePickerTableViewCell" customModule="Routines" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="72" width="375" height="151"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Pnh-fw-mhf" id="SC6-Mp-ITj">
-                                                            <rect key="frame" x="0.0" y="0.0" width="375" height="143"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="375" height="151"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="countDownTimer" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="dCw-2V-Quh" userLabel="Start Date Picker">
@@ -398,12 +403,103 @@
                                                     </tableViewCell>
                                                 </prototypes>
                                             </tableView>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8KC-Be-bUX" userLabel="Weekday">
+                                                <rect key="frame" x="0.0" y="960" width="375" height="84"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Repeat: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jlh-FR-5Xq">
+                                                        <rect key="frame" x="8" y="1" width="68" height="21"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MTe-LR-vHO">
+                                                        <rect key="frame" x="8" y="36" width="40" height="40"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" red="0.35686274509803922" green="0.62352941176470589" blue="0.79607843137254897" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <state key="normal" title="Mon">
+                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="weekdayRepeatButtonPressed:" destination="yBc-CP-55E" eventType="touchUpInside" id="rJk-BK-VlB"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8HA-Ig-b0i" userLabel="Tue">
+                                                        <rect key="frame" x="61" y="36" width="40" height="40"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" red="0.35686274509999999" green="0.62352941179999999" blue="0.79607843140000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <state key="normal" title="Tue">
+                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="weekdayRepeatButtonPressed:" destination="yBc-CP-55E" eventType="touchUpInside" id="hZa-C6-BR4"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bDG-Eb-lod" userLabel="Wed">
+                                                        <rect key="frame" x="114" y="36" width="40" height="40"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" red="0.35686274509999999" green="0.62352941179999999" blue="0.79607843140000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <state key="normal" title="Wed">
+                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="weekdayRepeatButtonPressed:" destination="yBc-CP-55E" eventType="touchUpInside" id="y6S-Wk-8ca"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G1W-Pa-Y9M" userLabel="Thu">
+                                                        <rect key="frame" x="167" y="36" width="40" height="40"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" red="0.35686274509999999" green="0.62352941179999999" blue="0.79607843140000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <state key="normal" title="Thur">
+                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="weekdayRepeatButtonPressed:" destination="yBc-CP-55E" eventType="touchUpInside" id="xlA-7d-gyS"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HBa-cx-PeA" userLabel="Fri">
+                                                        <rect key="frame" x="223" y="36" width="40" height="40"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" red="0.35686274509999999" green="0.62352941179999999" blue="0.79607843140000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <state key="normal" title="Fri">
+                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="weekdayRepeatButtonPressed:" destination="yBc-CP-55E" eventType="touchUpInside" id="PyI-s7-oW9"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" tag="6" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mel-dv-P7O" userLabel="Sat">
+                                                        <rect key="frame" x="275" y="36" width="40" height="40"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" red="0.35686274509999999" green="0.62352941179999999" blue="0.79607843140000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <state key="normal" title="Sat">
+                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="weekdayRepeatButtonPressed:" destination="yBc-CP-55E" eventType="touchUpInside" id="9yf-C4-Hn5"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" tag="7" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="buP-1c-uZY" userLabel="Sun">
+                                                        <rect key="frame" x="327" y="36" width="40" height="40"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" red="0.35686274509999999" green="0.62352941179999999" blue="0.79607843140000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <state key="normal" title="Sun">
+                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="weekdayRepeatButtonPressed:" destination="yBc-CP-55E" eventType="touchUpInside" id="M0m-b2-ubS"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </view>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FzR-bh-gd3" userLabel="Done View">
-                                                <rect key="frame" x="0.0" y="933" width="375" height="67"/>
+                                                <rect key="frame" x="0.0" y="1042" width="375" height="60"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H7N-BS-dgJ">
-                                                        <rect key="frame" x="165" y="16" width="45" height="34"/>
+                                                        <rect key="frame" x="165" y="13" width="45" height="34"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
                                                         <state key="normal" title="Done">
@@ -444,7 +540,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1000" id="auR-uS-6vv"/>
+                                            <constraint firstAttribute="height" constant="1100" id="auR-uS-6vv"/>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1000" id="dGf-va-mLI"/>
                                         </constraints>
                                     </view>
@@ -476,13 +572,20 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <navigationItem key="navigationItem" title="Edit Routine" id="Jdy-w9-9ei"/>
-                    <size key="freeformSize" width="375" height="1000"/>
+                    <size key="freeformSize" width="375" height="1100"/>
                     <connections>
+                        <outlet property="fridayButton" destination="HBa-cx-PeA" id="iBh-Hv-6S8"/>
                         <outlet property="libraryImageButton" destination="1Y8-12-Ppu" id="52e-dz-30E"/>
+                        <outlet property="mondayButton" destination="MTe-LR-vHO" id="qJw-OC-6gg"/>
                         <outlet property="needPermissionView" destination="LAT-G0-blo" id="R49-B0-NCh"/>
                         <outlet property="routineName" destination="MUF-bs-ahK" id="7Lx-XS-BVG"/>
+                        <outlet property="saturdayButton" destination="Mel-dv-P7O" id="Ses-Ss-mKn"/>
                         <outlet property="selectedImageView" destination="Jrc-Z5-y6M" id="cay-BO-mI0"/>
+                        <outlet property="sundayButton" destination="buP-1c-uZY" id="Mjn-gT-00j"/>
                         <outlet property="tableView" destination="aTY-Ys-kTS" id="lTw-Ig-qlx"/>
+                        <outlet property="thursdayButton" destination="G1W-Pa-Y9M" id="k6M-jf-eft"/>
+                        <outlet property="tuesdayButton" destination="8HA-Ig-b0i" id="aOF-um-yCR"/>
+                        <outlet property="wednesdayButton" destination="bDG-Eb-lod" id="IoK-a3-c22"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eom-Im-GkU" userLabel="First Responder" sceneMemberID="firstResponder"/>

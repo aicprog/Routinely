@@ -26,12 +26,12 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
     //var endTime: Date?
     var reminderOn = false
     var userChoosingDate = false
-   // var validTimePeriod = false
+    // var validTimePeriod = false
     
     //MARK: Variables for setting up icons
     var pickerController = UIImagePickerController()
     var selectedImage: UIImage?
- //   var selectedIndex: Int?
+    //   var selectedIndex: Int?
     var icons: [UIImage] = [
         UIImage(named: "icon1")!,
         UIImage(named: "icon2")!,
@@ -59,17 +59,27 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         UIImage(named: "icon25")!
     ]
     
-    //MARK: Variables for Timer
-   // var time
+    //MARK: Variables for Reminder
+    var notificationDays:[Int] = []
+    //  var notificationPathsArray: [String] = []
+    
     
     //MARK: - IBOutlets
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var routineName: UITextField!
     @IBOutlet weak var needPermissionView: UIView!
-
+    
     @IBOutlet weak var selectedImageView: UIImageView!
     
     @IBOutlet weak var libraryImageButton: UIButton!
+    
+    @IBOutlet weak var mondayButton: UIButton!
+    @IBOutlet weak var tuesdayButton: UIButton!
+    @IBOutlet weak var wednesdayButton: UIButton!
+    @IBOutlet weak var thursdayButton: UIButton!
+    @IBOutlet weak var fridayButton: UIButton!
+    @IBOutlet weak var saturdayButton: UIButton!
+    @IBOutlet weak var sundayButton: UIButton!
     
     
     override func viewDidLoad() {
@@ -88,7 +98,20 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
                 
                 selectedImageView.image = UIImage(contentsOfFile: fileURL.path)
             }
-   
+            
+            
+            for notification in routine.notifications{
+                print("Notifications")
+                print(notification.dayofTheWeek, notification.notificationPath)
+                notificationDays.append(notification.dayofTheWeek)
+            }
+            
+            for day in notificationDays{
+               // print(day)
+                initializeDayOfTheWeekButtonProperties(with: day)
+            }
+            
+            
         }
         
         //For tableView
@@ -102,25 +125,26 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         
         
         //set pickerController delegate
-         pickerController.delegate = self
+        pickerController.delegate = self
         
         //initialize roundness property for library image Button
         libraryImageButton.layer.cornerRadius = libraryImageButton.frame.size.width / 3;
         libraryImageButton.clipsToBounds = true
         libraryImageButton.alpha = 0.9
         
-          //initialize roundness property for selected image view
+        //initialize roundness property for selected image view
         selectedImageView.layer.cornerRadius = selectedImageView.frame.size.width / 6;
         selectedImageView.clipsToBounds = true
         selectedImageView.alpha = 0.9
         
-      
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         //For Calendar
         askUserForPermission()
-        print("I work")
+        
+        // print("I work")
     }
     
     //MARK: - TableView Methods
@@ -145,7 +169,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
             //action if switch is toggled
             cell.switchToggled = {
                 self.reminderOn = !self.reminderOn
-                print(self.reminderOn)
+                //print(self.reminderOn)
                 tableView.reloadData()
             }
             
@@ -154,7 +178,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
             //tableView is of type DatePickerTableViewCell
         else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "DatePickerCell", for: indexPath) as! DatePickerTableViewCell
-
+            
             //Only show cells if switch is on
             if reminderOn{
                 cell.isHidden = false
@@ -185,15 +209,15 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
             }
             
             //MARK: DO SOMETHING ABOUT THIS
-                //action for datepicker
-                cell.doneInputting = {
-                   // let strDate = self.dateFormatter(with: cell.datePicker.date)
-                    self.userChoosingDate = true
-                   cell.subtitle.text = "Hello"
-                    tableView.reloadData()
-                    
-                    
-                }
+            //action for datepicker
+            cell.doneInputting = {
+                // let strDate = self.dateFormatter(with: cell.datePicker.date)
+                self.userChoosingDate = true
+                cell.subtitle.text = "Hello"
+                tableView.reloadData()
+                
+                
+            }
             cell.title.text = data[indexPath.section][indexPath.row]
             
             return cell
@@ -215,11 +239,11 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if startPickerVisible && indexPath.row == 1{
-            return 125
+            return 150
             
         } else if endPickerVisible && indexPath.row == 2{
-            return 125
-
+            return 150
+            
         } else{
             return 44
         }
@@ -234,7 +258,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         guard let routine = selectedRoutine else {fatalError()}
         
         //var succcesful = false
-    
+        
         do{
             try realm.write {
                 
@@ -245,24 +269,56 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
                     routine.timeForRoutine = timeInterval
                     routine.startTime = startTime
                     routine.reminderSet = true
-                    routine.notificationIdentifier = createNotification(startTime: routine.startTime!, intervalTime: routine.timeForRoutine!)
-    
+                    
+                    //update Notifications by deleting unlicked daysOfTheWeekButtons
+                    for notification in routine.notifications{
+                        // print(notifications.dayofTheWeek)
+                        if !notificationDays.contains(notification.dayofTheWeek){
+                            deleteNotification(with: notification.notificationPath)
+                            print("Notification Deleted Deleted ...")
+                            realm.delete(notification)
+                        }
+                    }
+                    
+                    
+                    //In the case that no day was selected
+                    if notificationDays.isEmpty{
+                        
+                    }
+                    
+                    //for replacing and adding notifications
+                    for notificationDay in notificationDays{
+                        let notifications = routine.notifications.filter("dayofTheWeek == %@", notificationDay)
+                        
+                        if let notification = notifications.first{
+                            notification.notificationPath = createNotification(weekday: notificationDay, startTime: routine.startTime!, intervalTime: routine.timeForRoutine!)
+                        }
+                        else{
+                            let newNotification = Notification()
+                            newNotification.dayofTheWeek = notificationDay
+                            
+                            newNotification.notificationPath = createNotification(weekday: notificationDay, startTime: routine.startTime!, intervalTime: routine.timeForRoutine!)
+                            routine.notifications.append(newNotification)
+                        }
+                    }
                 }
                 else{
                     routine.timeForRoutine = nil
                     routine.reminderSet = false
                     routine.startTime = nil
-                    if let notificationIdentifier = routine.notificationIdentifier{
-                        deleteNotification(with: notificationIdentifier)
-                        print("Notification Deleted")
+                    
+                    for notification in routine.notifications{
+                        deleteNotification(with: notification.notificationPath )
                     }
-                    routine.notificationIdentifier = nil
+                    print("Notification Deleted")
+                    
+                    routine.notifications.removeAll()
                     
                 }
                 //updates for selectedImage
                 if let image = selectedImage {
                     routine.partialImagePath = saveImage(previousPartialPath:routine.partialImagePath, image: image)
-                    print(routine.partialImagePath!)
+                    //print(routine.partialImagePath!)
                 }
                 
                 if let name = routineName?.text{
@@ -271,8 +327,10 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
                     }
                 }
                 
+                
+                
             }
-           
+            
             
         }
         catch{
@@ -290,7 +348,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
     
     @IBAction func cancelBtnPressed(_ sender: UIButton) {
         self.dismiss(animated: true) {
-            print("I am dismissed")
+            //print("I am dismissed")
         }
     }
     
@@ -303,7 +361,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }
-    
+        
         
         
     }
@@ -314,12 +372,63 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     
+    //For Repeat Notifications
+    @IBAction func weekdayRepeatButtonPressed(_ sender: UIButton) {
     
+        
+        let buttonAlreadyPressed = addToNotificationArray(dayOfTheWeek: sender.tag)
+        
+        switch sender.tag{
+        case 1:         //when Button1 is clicked...
+            mondayButton.backgroundColor = buttonAlreadyPressed ? #colorLiteral(red: 0.3568627451, green: 0.6235294118, blue: 0.7960784314, alpha: 1): UIColor.red
+            break
+        case 2:
+            tuesdayButton.backgroundColor = buttonAlreadyPressed ? #colorLiteral(red: 0.3568627451, green: 0.6235294118, blue: 0.7960784314, alpha: 1): UIColor.red
+            break
+        case 3:
+            wednesdayButton.backgroundColor = buttonAlreadyPressed ? #colorLiteral(red: 0.3568627451, green: 0.6235294118, blue: 0.7960784314, alpha: 1): UIColor.red
+            break
+        case 4:
+            thursdayButton.backgroundColor = buttonAlreadyPressed ? #colorLiteral(red: 0.3568627451, green: 0.6235294118, blue: 0.7960784314, alpha: 1): UIColor.red
+            break
+        case 5:
+            fridayButton.backgroundColor = buttonAlreadyPressed ? #colorLiteral(red: 0.3568627451, green: 0.6235294118, blue: 0.7960784314, alpha: 1): UIColor.red
+            break
+        case 6:
+            saturdayButton.backgroundColor = buttonAlreadyPressed ? #colorLiteral(red: 0.3568627451, green: 0.6235294118, blue: 0.7960784314, alpha: 1): UIColor.red
+            break
+        case 7:
+            sundayButton.backgroundColor = buttonAlreadyPressed ? #colorLiteral(red: 0.3568627451, green: 0.6235294118, blue: 0.7960784314, alpha: 1): UIColor.red
+            break
+        default: print("Other...")
+            break
+        }
+        
+    }
     
     
     
     
     //MARK: - My Functions
+    
+    func addToNotificationArray(dayOfTheWeek: Int) -> Bool{
+        
+        var buttonPressed = false
+        
+        if notificationDays.contains(dayOfTheWeek){
+            notificationDays.removeAll{$0 == dayOfTheWeek}
+            buttonPressed = true
+        }else{
+            notificationDays.append(dayOfTheWeek)
+        }
+        
+        //        print("Elements in array")
+        //        for element in notificationDays {
+        //            print(":\(element)")
+        //        }
+        return buttonPressed
+    }
+    
     
     func toggleStartDatePicker () {
         startPickerVisible = !startPickerVisible
@@ -330,7 +439,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         endPickerVisible = !endPickerVisible
         tableView.reloadData()
     }
-
+    
     func updateTimeIntervalCell(with cell: DatePickerTableViewCell) {
         if let interval = timeInterval{
             cell.datePicker.date = interval
@@ -346,8 +455,8 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         if let start = startTime{
             cell.datePicker.date = start
             let dateFormatter = DateFormatter()
-           // dateFormatter.dateStyle = DateFormatter.Style.short
-           dateFormatter.timeStyle = DateFormatter.Style.short
+            // dateFormatter.dateStyle = DateFormatter.Style.short
+            dateFormatter.timeStyle = DateFormatter.Style.short
             
             
             cell.subtitle.text = dateFormatter.string(from: start)
@@ -376,7 +485,36 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         routineName.attributedPlaceholder = placeHolder
     }
     
-
+    func initializeDayOfTheWeekButtonProperties(with dayOfTheWeek: Int){
+        
+        switch dayOfTheWeek{
+        case 1:         //when Button1 is clicked...
+            mondayButton.backgroundColor = UIColor.red
+            break
+        case 2:
+            tuesdayButton.backgroundColor = UIColor.red
+            break
+        case 3:
+            wednesdayButton.backgroundColor = UIColor.red
+            break
+        case 4:
+            thursdayButton.backgroundColor = UIColor.red
+            break
+        case 5:
+            fridayButton.backgroundColor = UIColor.red
+            break
+        case 6:
+            saturdayButton.backgroundColor = UIColor.red
+            break
+        case 7:
+            sundayButton.backgroundColor = UIColor.red
+            break
+        default: print("Other...")
+            break
+        }
+    }
+    
+    
     
     //MARK: - For Notifications
     func askUserForPermission(){
@@ -396,17 +534,23 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    func createNotification(startTime: Date, intervalTime: Date) -> String {
+    func createNotification(weekday: Int, startTime: Date, intervalTime: Date) -> String {
         
         guard let routine = selectedRoutine else {fatalError()}
         //guard let routineTimeInterval = routine.time else {fatalError()}
         
         //for interval
-        let units: Set<Calendar.Component> = [.hour, .minute,]
-        let intervalComponents = NSCalendar.current.dateComponents(units, from: intervalTime)
+        let units: Set<Calendar.Component> = [. weekday, .hour, .minute,]
+        var intervalComponents = NSCalendar.current.dateComponents(units, from: intervalTime)
+        intervalComponents.weekday = weekday
         
+        //let calendar = Calendar(identifier: .gregorian)
+        
+        // guard let weekday = intervalComponents.weekday else {fatalError()}
         guard let hours = intervalComponents.hour else {fatalError()}
         guard let minutes = intervalComponents.minute else {fatalError()}
+        
+        
         
         var timeIntervalString = ""
         
@@ -431,7 +575,8 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         content.title = routine.name
         content.body = "Your routine is starting! You have \(timeIntervalString) for this routine."
         content.sound = UNNotificationSound.default
-
+        
+        
         let startComponents = NSCalendar.current.dateComponents(units, from: startTime)
         
         // Create the trigger as a repeating event.
@@ -440,15 +585,23 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         
         
         // Create the request
-        var uniqueIdentifier = ""
-        if let identifierString = routine.notificationIdentifier{
-            uniqueIdentifier = identifierString
+        var uniqueIdentifier: String?
+        
+        for notification in routine.notifications{
+            if notification.dayofTheWeek == weekday{
+                uniqueIdentifier = notification.notificationPath
+            }
         }
-        else{
+        
+        if uniqueIdentifier == nil{
             uniqueIdentifier = UUID().uuidString
         }
-        let request = UNNotificationRequest(identifier: uniqueIdentifier,
+        
+        guard let identifier = uniqueIdentifier else{fatalError()}
+        
+        let request = UNNotificationRequest(identifier: identifier,
                                             content: content, trigger: trigger)
+        
         
         // Schedule the request with the system.
         let notificationCenter = UNUserNotificationCenter.current()
@@ -458,18 +611,20 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
                 print("There was an error adding the notification")
             }else{
                 print("Notification Added")
+                print("Identifier: \(identifier)")
             }
         }
-        print(uniqueIdentifier)
-        return uniqueIdentifier
+        return identifier
     }
     
     func deleteNotification(with notificationIdentifier: String){
-         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
+        print("Identifier to be deleted: \(notificationIdentifier)")
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
         UNUserNotificationCenter.current().removeAllDeliveredNotifications()
         
-      
+        
     }
+    
     //MARK: - Functions for saving images
     
     func saveImage(previousPartialPath: String?, image: UIImage) -> String? {
@@ -493,7 +648,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
                 
             }
         }
-
+        
         //for new image Path
         let uniqueIdentifier = UUID().uuidString
         let partialPath = "RoutinelyImages/icon\(uniqueIdentifier).png"
@@ -528,11 +683,7 @@ extension DetailedRoutineViewController: UNUserNotificationCenterDelegate{
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
-        if let identifier = selectedRoutine?.notificationIdentifier{
-            if response.notification.request.identifier == identifier{
-                
-            }
-        }
+        
     }
     
     
@@ -565,20 +716,20 @@ extension DetailedRoutineViewController: UICollectionViewDelegate, UICollectionV
         
         cell.iconImage.image = icons[indexPath.item]
         
-
+        
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    
+        
         print(indexPath.item)
         let image = icons[indexPath.item]
         //update selected image
         selectedImageView.image = image
         selectedImage = image
         
-       // collectionView.reloadData()
+        // collectionView.reloadData()
         
         //libraryImageButton.setImage(icons[indexPath.item], for: .normal)
     }
@@ -594,378 +745,378 @@ extension DetailedRoutineViewController: UIImagePickerControllerDelegate, UINavi
             //libraryImageButton.setImage(image, for: .normal)
             selectedImageView.image = image
             selectedImage = image
+            
+            pickerController.dismiss(animated: true, completion: nil)
+        }
         
-        pickerController.dismiss(animated: true, completion: nil)
-    }
-    
         //guard let fileUrl = info[UIImagePickerController.InfoKey.imageURL] as? URL else { return }
         // print(fileUrl.lastPathComponent) // get file Name
         //print(fileUrl.pathExtension)     // get file extension
         
         // selectedImageName = fileUrl.lastPathComponent
+        
+    }
     
-}
     
     
-
-
-
-
-
-
-//create a new reminder set
-
-
-
-//MARK: - Extra
-//func createRoutinelyReminderSet(){
-//
-//
-//
-//    let eventStore = EKEventStore()
-//
-//    let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
-//
-//    if let _ = eventStore.calendars(for: .reminder).first(where: { $0.calendarIdentifier == uniqueIdentifier }){
-//        print("List already made")
-//
-//    } else{
-//
-//        //var routinelyCalendar: EKCalendar?
-//        let routinelyCalendar = EKCalendar(for: .reminder, eventStore: eventStore)
-//
-//        routinelyCalendar.title = "Routinely"
-//        let sourcesInEventStore = eventStore.defaultCalendarForNewReminders()
-//
-//        if let src = sourcesInEventStore?.source{
-//            routinelyCalendar.source = src
-//
-//            // Save the calendar using the Event Store instance
-//            do {
-//
-//                try eventStore.saveCalendar(routinelyCalendar, commit: true)
-//                UserDefaults.standard.set(routinelyCalendar.calendarIdentifier, forKey: keyForRoutinelyCalendar)
-//                print("Reminder List Just Made")
-//            } catch {
-//                let alert = UIAlertController(title: "Reminder List could not save", message: (error as NSError).localizedDescription, preferredStyle: .alert)
-//                let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-//                alert.addAction(OKAction)
-//
-//                self.present(alert, animated: true, completion: nil)
-//
-//            }
-//
-//
-//        }
-//
-//    }
-//
-//}
-//
-////create a new reminder event
-//
-//func createReminderEvent(with startDate: Date, with endDate: Date, routineName: String, routineSubRoutineCount: Int){
-//
-//    let eventStore = EKEventStore()
-//
-//    let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
-//    //if cal.title == "Calendarname" { calUid = cal.calendarIdentifier }
-//
-//
-//
-//    if let routinelyCalendar = eventStore.calendars(for: .reminder).first(where:{ $0.calendarIdentifier == uniqueIdentifier }){
-//
-//
-//
-//        let reminder = EKReminder(eventStore: eventStore)
-//        reminder.title = routineName
-//        reminder.calendar = routinelyCalendar
-//
-//
-//        let unitFlags: Set<Calendar.Component> = [.hour, .day, .month, .year]
-//        let startComponents = NSCalendar.current.dateComponents(unitFlags, from: startDate)
-//        reminder.startDateComponents = startComponents
-//
-//
-//        reminder.addAlarm(EKAlarm(absoluteDate: startDate))
-//        //reminder.addAlarm(EKAlarm(absoluteDate: endDate))
-//
-//        do {
-//            try eventStore.save(reminder, commit: true)
-//            print("Reminder Added")
-//        } catch let error {
-//            print("Reminder failed with error \(error.localizedDescription)")
-//        }
-//    }
-//}
-////fetch reminder
-//
-//func checkForReminder(reminderName: String, startDate: Date) -> Bool {
-//    let eventStore = EKEventStore()
-//
-//
-//    let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
-//    //if cal.title == "Calendarname" { calUid = cal.calendarIdentifier }
-//
-//
-//
-//    if let routinelyCalendar = eventStore.calendars(for: .reminder).first(where:{ $0.calendarIdentifier == uniqueIdentifier }){
-//
-//        var answer = false
-//
-//        //check if previous event
-//        let predicate: NSPredicate? = eventStore.predicateForReminders(in: [routinelyCalendar])
-//
-//        if let aPredicate = predicate {
-//            eventStore.fetchReminders(matching: aPredicate, completion: { (reminders) in
-//                for reminder in reminders! {
-//                    let unitFlags: Set<Calendar.Component> = [.hour, .day, .month, .year]
-//                    let startComponents = NSCalendar.current.dateComponents(unitFlags, from: startDate)
-//                    reminder.startDateComponents = startComponents
-//                    if reminder.title == reminderName && reminder.startDateComponents == startComponents {
-//                        answer = true
-//                        print("Inside: \(answer)")
-//                    }
-//                }
-//            })
-//            print("Hello \(answer)")
-//            return answer
-//        }
-//    }
-//
-//    return false
-//
-//}
-
-
-
-
-
-
-//
-//func askUserPermissionForReminders() {
-//
-//    let status = EKEventStore.authorizationStatus(for: EKEntityType.reminder)
-//
-//    switch (status) {
-//    case EKAuthorizationStatus.notDetermined:
-//        EKEventStore().requestAccess(to: .reminder, completion: { (granted, error) in
-//            if (error != nil) || !granted {
-//                self.askUserPermissionForReminders()
-//                print("There was an error asking for your request")
-//            }
-//            else if granted && error == nil {
-//                self.createRoutinelyReminderSet()
-//            }
-//        })
-//    case EKAuthorizationStatus.authorized:
-//        createRoutinelyReminderSet()
-//        print("Authorized")
-//    case EKAuthorizationStatus.restricted, EKAuthorizationStatus.denied:
-//        // We need to help them give us permission
-//        DispatchQueue.main.async {
-//            self.needPermissionView.fadeIn()
-//        }
-//    //print("Ask for permission")
-//    @unknown default:
-//        print("There was an error.")
-//    }
-//
-//
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        //        func checkEvent(startTime: Date, endTime: Date) -> Bool{
-        //
-        //            let eventStore = EKEventStore()
-        //
-        //            let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
-        //
-        //            guard let calendar = eventStore.calendars(for: .event).first(where: { $0.calendarIdentifier == uniqueIdentifier }) else {fatalError()}
-        //
-        //            //print(calendar)
-        //            let predicate = eventStore.predicateForEvents(withStart: startTime.addingTimeInterval(-3600), end: endTime.addingTimeInterval(3600), calendars: [calendar])
-        //            //print(predicate)
-        //
-        //            let existingEvents = eventStore.events(matching: predicate)
-        //            //print(existingEvents)
-        //            if let date = existingEvents.first?.startDate{
-        //                print(date == startTime)
-        //            }
-        //            // print(existingEvents.first!.startDate)
-        //            print(startTime)
-        //            //print(endTime)
-        //            let eventAlreadyExists = existingEvents.contains(where: {event in selectedRoutine!.name == event.title && event.startDate == startTime && event.endDate == endTime})
-        //
-        //            return eventAlreadyExists
-        //        }
-        //
-        //
-        
-        
-        //
-        //    func createCalendarWithICloud(){
-        //
-        //        let eventStore = EKEventStore()
-        //        let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
-        //
-        //        if let _ = eventStore.calendars(for: .event).first(where: { $0.calendarIdentifier == uniqueIdentifier }){
-        //            print("Calendar already made")
-        //
-        //        } else{
-        //
-        //            //var routinelyCalendar: EKCalendar?
-        //            let routinelyCalendar = EKCalendar(for: .event, eventStore: eventStore)
-        //
-        //            routinelyCalendar.title = "Routinely Calendar"
-        //            let sourcesInEventStore = eventStore.defaultCalendarForNewEvents
-        //
-        //            if let src = sourcesInEventStore?.source{
-        //                routinelyCalendar.source = src
-        //
-        //                // Save the calendar using the Event Store instance
-        //                do {
-        //
-        //                    try eventStore.saveCalendar(routinelyCalendar, commit: true)
-        //                    UserDefaults.standard.set(routinelyCalendar.calendarIdentifier, forKey: keyForRoutinelyCalendar)
-        //                    print("Calendar Just Made")
-        //                } catch {
-        //                    let alert = UIAlertController(title: "Calendar could not save", message: (error as NSError).localizedDescription, preferredStyle: .alert)
-        //                    let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        //                    alert.addAction(OKAction)
-        //
-        //                    self.present(alert, animated: true, completion: nil)
-        //
-        //                }
-        //
-        //
-        //            }
-        //
-        //        }
-        //
-        //    }
-        //
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        //
-        //    func createCalendarEvent(with startDate: Date, with endDate: Date, routineName: String, routineSubRoutineCount: Int) {
-        //
-        //
-        //        //access the database
-        //        // if !checkEvent(startDate: startDate, endDate: endDate){
-        //
-        //
-        //
-        //        let eventStore = EKEventStore()
-        //
-        //        let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
-        //        //if cal.title == "Calendarname" { calUid = cal.calendarIdentifier }
-        //        if let newCalender = eventStore.calendars(for: .event).first(where: { $0.calendarIdentifier == uniqueIdentifier }){
-        //            let newEvent = EKEvent(eventStore: eventStore)
-        //            //assigning calendar you just crated to new event
-        //            newEvent.calendar = newCalender//eventStore.defaultCalendarForNewEvents
-        //            newEvent.title =  routineName
-        //            newEvent.startDate = startDate
-        //            newEvent.endDate = endDate
-        //            newEvent.notes = "This routine has \(routineSubRoutineCount) items"
-        //
-        //            //save the calendar using the event store instance
-        //            do{
-        //                //try to save teh event in the calendar associated with it
-        //                try eventStore.save(newEvent, span: .thisEvent)
-        //                //try eventStore.save(newEvent, span: .thisEvent, commit: true)
-        //                print("Event Saved")
-        //
-        //            }catch{
-        //                print("Event could not save")
-        //            }
-        //
-        //
-        //        }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        //    func createCalendarEvent(with startDate: Date, with endDate: Date, routineName: String, routineSubRoutineCount: Int) {
-        //
-        //
-        //
-        //
-        //        //if let routine = selectedRoutine{
-        //        eventStore = EKEventStore()
-        //
-        //        eventStore!.requestAccess(to: .event, completion: { (granted, error) in
-        //            if error == nil{
-        //
-        //                self.event = EKEvent(eventStore: self.eventStore!)
-        //                self.event!.title = routineName
-        //                self.event!.startDate = startDate
-        //                self.event!.endDate = endDate
-        //                self.event!.notes = "This routine has \(routineSubRoutineCount) items"
-        //                self.event!.calendar = self.eventStore?.defaultCalendarForNewEvents
-        //
-        //                //try to add Calendar event
-        //                do{
-        //                    try self.eventStore!.save(self.event!, span: .thisEvent)
-        //                }catch let error as NSError{
-        //                    print("There was an error saving the event: \(error)")
-        //                }
-        //
-        //                print("saved Event")
-        //            }
-        //            else{
-        //                print("There was an error creating this event ")
-        //            }
-        //        })
-        //
-        //        // }
-        //
-        //    }
-        //
-        
-        
-        
-
     
-
+    
+    
+    
+    
+    //create a new reminder set
+    
+    
+    
+    //MARK: - Extra
+    //func createRoutinelyReminderSet(){
+    //
+    //
+    //
+    //    let eventStore = EKEventStore()
+    //
+    //    let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
+    //
+    //    if let _ = eventStore.calendars(for: .reminder).first(where: { $0.calendarIdentifier == uniqueIdentifier }){
+    //        print("List already made")
+    //
+    //    } else{
+    //
+    //        //var routinelyCalendar: EKCalendar?
+    //        let routinelyCalendar = EKCalendar(for: .reminder, eventStore: eventStore)
+    //
+    //        routinelyCalendar.title = "Routinely"
+    //        let sourcesInEventStore = eventStore.defaultCalendarForNewReminders()
+    //
+    //        if let src = sourcesInEventStore?.source{
+    //            routinelyCalendar.source = src
+    //
+    //            // Save the calendar using the Event Store instance
+    //            do {
+    //
+    //                try eventStore.saveCalendar(routinelyCalendar, commit: true)
+    //                UserDefaults.standard.set(routinelyCalendar.calendarIdentifier, forKey: keyForRoutinelyCalendar)
+    //                print("Reminder List Just Made")
+    //            } catch {
+    //                let alert = UIAlertController(title: "Reminder List could not save", message: (error as NSError).localizedDescription, preferredStyle: .alert)
+    //                let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+    //                alert.addAction(OKAction)
+    //
+    //                self.present(alert, animated: true, completion: nil)
+    //
+    //            }
+    //
+    //
+    //        }
+    //
+    //    }
+    //
+    //}
+    //
+    ////create a new reminder event
+    //
+    //func createReminderEvent(with startDate: Date, with endDate: Date, routineName: String, routineSubRoutineCount: Int){
+    //
+    //    let eventStore = EKEventStore()
+    //
+    //    let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
+    //    //if cal.title == "Calendarname" { calUid = cal.calendarIdentifier }
+    //
+    //
+    //
+    //    if let routinelyCalendar = eventStore.calendars(for: .reminder).first(where:{ $0.calendarIdentifier == uniqueIdentifier }){
+    //
+    //
+    //
+    //        let reminder = EKReminder(eventStore: eventStore)
+    //        reminder.title = routineName
+    //        reminder.calendar = routinelyCalendar
+    //
+    //
+    //        let unitFlags: Set<Calendar.Component> = [.hour, .day, .month, .year]
+    //        let startComponents = NSCalendar.current.dateComponents(unitFlags, from: startDate)
+    //        reminder.startDateComponents = startComponents
+    //
+    //
+    //        reminder.addAlarm(EKAlarm(absoluteDate: startDate))
+    //        //reminder.addAlarm(EKAlarm(absoluteDate: endDate))
+    //
+    //        do {
+    //            try eventStore.save(reminder, commit: true)
+    //            print("Reminder Added")
+    //        } catch let error {
+    //            print("Reminder failed with error \(error.localizedDescription)")
+    //        }
+    //    }
+    //}
+    ////fetch reminder
+    //
+    //func checkForReminder(reminderName: String, startDate: Date) -> Bool {
+    //    let eventStore = EKEventStore()
+    //
+    //
+    //    let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
+    //    //if cal.title == "Calendarname" { calUid = cal.calendarIdentifier }
+    //
+    //
+    //
+    //    if let routinelyCalendar = eventStore.calendars(for: .reminder).first(where:{ $0.calendarIdentifier == uniqueIdentifier }){
+    //
+    //        var answer = false
+    //
+    //        //check if previous event
+    //        let predicate: NSPredicate? = eventStore.predicateForReminders(in: [routinelyCalendar])
+    //
+    //        if let aPredicate = predicate {
+    //            eventStore.fetchReminders(matching: aPredicate, completion: { (reminders) in
+    //                for reminder in reminders! {
+    //                    let unitFlags: Set<Calendar.Component> = [.hour, .day, .month, .year]
+    //                    let startComponents = NSCalendar.current.dateComponents(unitFlags, from: startDate)
+    //                    reminder.startDateComponents = startComponents
+    //                    if reminder.title == reminderName && reminder.startDateComponents == startComponents {
+    //                        answer = true
+    //                        print("Inside: \(answer)")
+    //                    }
+    //                }
+    //            })
+    //            print("Hello \(answer)")
+    //            return answer
+    //        }
+    //    }
+    //
+    //    return false
+    //
+    //}
+    
+    
+    
+    
+    
+    
+    //
+    //func askUserPermissionForReminders() {
+    //
+    //    let status = EKEventStore.authorizationStatus(for: EKEntityType.reminder)
+    //
+    //    switch (status) {
+    //    case EKAuthorizationStatus.notDetermined:
+    //        EKEventStore().requestAccess(to: .reminder, completion: { (granted, error) in
+    //            if (error != nil) || !granted {
+    //                self.askUserPermissionForReminders()
+    //                print("There was an error asking for your request")
+    //            }
+    //            else if granted && error == nil {
+    //                self.createRoutinelyReminderSet()
+    //            }
+    //        })
+    //    case EKAuthorizationStatus.authorized:
+    //        createRoutinelyReminderSet()
+    //        print("Authorized")
+    //    case EKAuthorizationStatus.restricted, EKAuthorizationStatus.denied:
+    //        // We need to help them give us permission
+    //        DispatchQueue.main.async {
+    //            self.needPermissionView.fadeIn()
+    //        }
+    //    //print("Ask for permission")
+    //    @unknown default:
+    //        print("There was an error.")
+    //    }
+    //
+    //
+    //}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //        func checkEvent(startTime: Date, endTime: Date) -> Bool{
+    //
+    //            let eventStore = EKEventStore()
+    //
+    //            let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
+    //
+    //            guard let calendar = eventStore.calendars(for: .event).first(where: { $0.calendarIdentifier == uniqueIdentifier }) else {fatalError()}
+    //
+    //            //print(calendar)
+    //            let predicate = eventStore.predicateForEvents(withStart: startTime.addingTimeInterval(-3600), end: endTime.addingTimeInterval(3600), calendars: [calendar])
+    //            //print(predicate)
+    //
+    //            let existingEvents = eventStore.events(matching: predicate)
+    //            //print(existingEvents)
+    //            if let date = existingEvents.first?.startDate{
+    //                print(date == startTime)
+    //            }
+    //            // print(existingEvents.first!.startDate)
+    //            print(startTime)
+    //            //print(endTime)
+    //            let eventAlreadyExists = existingEvents.contains(where: {event in selectedRoutine!.name == event.title && event.startDate == startTime && event.endDate == endTime})
+    //
+    //            return eventAlreadyExists
+    //        }
+    //
+    //
+    
+    
+    //
+    //    func createCalendarWithICloud(){
+    //
+    //        let eventStore = EKEventStore()
+    //        let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
+    //
+    //        if let _ = eventStore.calendars(for: .event).first(where: { $0.calendarIdentifier == uniqueIdentifier }){
+    //            print("Calendar already made")
+    //
+    //        } else{
+    //
+    //            //var routinelyCalendar: EKCalendar?
+    //            let routinelyCalendar = EKCalendar(for: .event, eventStore: eventStore)
+    //
+    //            routinelyCalendar.title = "Routinely Calendar"
+    //            let sourcesInEventStore = eventStore.defaultCalendarForNewEvents
+    //
+    //            if let src = sourcesInEventStore?.source{
+    //                routinelyCalendar.source = src
+    //
+    //                // Save the calendar using the Event Store instance
+    //                do {
+    //
+    //                    try eventStore.saveCalendar(routinelyCalendar, commit: true)
+    //                    UserDefaults.standard.set(routinelyCalendar.calendarIdentifier, forKey: keyForRoutinelyCalendar)
+    //                    print("Calendar Just Made")
+    //                } catch {
+    //                    let alert = UIAlertController(title: "Calendar could not save", message: (error as NSError).localizedDescription, preferredStyle: .alert)
+    //                    let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+    //                    alert.addAction(OKAction)
+    //
+    //                    self.present(alert, animated: true, completion: nil)
+    //
+    //                }
+    //
+    //
+    //            }
+    //
+    //        }
+    //
+    //    }
+    //
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //
+    //    func createCalendarEvent(with startDate: Date, with endDate: Date, routineName: String, routineSubRoutineCount: Int) {
+    //
+    //
+    //        //access the database
+    //        // if !checkEvent(startDate: startDate, endDate: endDate){
+    //
+    //
+    //
+    //        let eventStore = EKEventStore()
+    //
+    //        let uniqueIdentifier = UserDefaults.standard.string(forKey: keyForRoutinelyCalendar)
+    //        //if cal.title == "Calendarname" { calUid = cal.calendarIdentifier }
+    //        if let newCalender = eventStore.calendars(for: .event).first(where: { $0.calendarIdentifier == uniqueIdentifier }){
+    //            let newEvent = EKEvent(eventStore: eventStore)
+    //            //assigning calendar you just crated to new event
+    //            newEvent.calendar = newCalender//eventStore.defaultCalendarForNewEvents
+    //            newEvent.title =  routineName
+    //            newEvent.startDate = startDate
+    //            newEvent.endDate = endDate
+    //            newEvent.notes = "This routine has \(routineSubRoutineCount) items"
+    //
+    //            //save the calendar using the event store instance
+    //            do{
+    //                //try to save teh event in the calendar associated with it
+    //                try eventStore.save(newEvent, span: .thisEvent)
+    //                //try eventStore.save(newEvent, span: .thisEvent, commit: true)
+    //                print("Event Saved")
+    //
+    //            }catch{
+    //                print("Event could not save")
+    //            }
+    //
+    //
+    //        }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //    func createCalendarEvent(with startDate: Date, with endDate: Date, routineName: String, routineSubRoutineCount: Int) {
+    //
+    //
+    //
+    //
+    //        //if let routine = selectedRoutine{
+    //        eventStore = EKEventStore()
+    //
+    //        eventStore!.requestAccess(to: .event, completion: { (granted, error) in
+    //            if error == nil{
+    //
+    //                self.event = EKEvent(eventStore: self.eventStore!)
+    //                self.event!.title = routineName
+    //                self.event!.startDate = startDate
+    //                self.event!.endDate = endDate
+    //                self.event!.notes = "This routine has \(routineSubRoutineCount) items"
+    //                self.event!.calendar = self.eventStore?.defaultCalendarForNewEvents
+    //
+    //                //try to add Calendar event
+    //                do{
+    //                    try self.eventStore!.save(self.event!, span: .thisEvent)
+    //                }catch let error as NSError{
+    //                    print("There was an error saving the event: \(error)")
+    //                }
+    //
+    //                print("saved Event")
+    //            }
+    //            else{
+    //                print("There was an error creating this event ")
+    //            }
+    //        })
+    //
+    //        // }
+    //
+    //    }
+    //
+    
+    
+    
+    
+    
+    
 }
