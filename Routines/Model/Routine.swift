@@ -29,7 +29,9 @@ class Routine: Object{
     
     
     let subRoutines = List<SubRoutine>()
-    let notifications = List<Notification>()
+    //let notifications = List<Notification>()
+    
+    var weekDayNotifications = List<WeekDay>()
     
     //let reminders = List<Reminder>()
     

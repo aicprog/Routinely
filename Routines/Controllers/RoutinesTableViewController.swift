@@ -45,11 +45,11 @@ class RoutinesTableViewController: UITableViewController {
         //load text field
         initializeAddTxtFieldUI()
         
-    
+        
         
         //load items
         loadRoutines()
-       // testerItem()
+        // testerItem()
         
     }
     
@@ -83,7 +83,7 @@ class RoutinesTableViewController: UITableViewController {
             let img = UIImage(named:defaultImageName)
             if let selectedImagePartialPath = routine.partialImagePath{
                 
-                print("I have an image")
+                //print("I have an image")
                 guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return cell}
                 let selectedFileURL: URL = documentsDirectory.appendingPathComponent(selectedImagePartialPath)
                 print("Get pic: \(selectedFileURL.absoluteString)")
@@ -101,7 +101,7 @@ class RoutinesTableViewController: UITableViewController {
             else{
                 cell.timeDifference.text = ""
             }
-        
+            
             
         }
         
@@ -134,8 +134,16 @@ class RoutinesTableViewController: UITableViewController {
             if let indexPath = sender as? IndexPath{
                 destinationVC.selectedRoutine = routines?[indexPath.row]
                 tableView.deselectRow(at: indexPath, animated: true)
+                
             }
+            let popVC = destinationVC.popoverPresentationController
+            popVC?.delegate = self
         }
+        
+        // override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        //            if let adpostVC = segue.destinationViewController as? XXXController {
+        //                let popPC = adpostVC.popoverPresentationController
+        //                popPC?.delegate = self
     }
     
     
@@ -152,7 +160,7 @@ class RoutinesTableViewController: UITableViewController {
         
     }
     
-
+    
     
     func loadRoutines(){
         routines = realm.objects(Routine.self)
@@ -244,7 +252,7 @@ class RoutinesTableViewController: UITableViewController {
             let myFolder = docsUrl.appendingPathComponent(folderName)
             try fileManager.createDirectory(at: myFolder, withIntermediateDirectories: true)
             
-           print(myFolder.absoluteString)
+            print(myFolder.absoluteString)
         }
         catch{
             print("Folder could not save")
@@ -294,6 +302,17 @@ extension RoutinesTableViewController: UITextFieldDelegate{
         addTxtField.leftViewMode = .always
     }
     
+    
+}
 
+//MARK: - UIPopOver Extension
+extension RoutinesTableViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return UIModalPresentationStyle.fullScreen
+    }
+    
+    func presentationController(_ controller: UIPresentationController, viewControllerForAdaptivePresentationStyle style: UIModalPresentationStyle) -> UIViewController? {
+        return UINavigationController(rootViewController: controller.presentedViewController)
+    }
 }
 

@@ -10,6 +10,9 @@
 		310BC6DD22EAD6050052405B /* IconCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310BC6DC22EAD6050052405B /* IconCollectionViewCell.swift */; };
 		314283CB22E6B07F0019694C /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314283CA22E6B07F0019694C /* UIViewExtensions.swift */; };
 		314283CD22E6BFB40019694C /* DetailedRoutineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314283CC22E6BFB40019694C /* DetailedRoutineViewController.swift */; };
+		3148D0AA22F9527A00F91ABC /* RepeatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3148D0A922F9527900F91ABC /* RepeatTableViewController.swift */; };
+		3148D0AC22FA26D600F91ABC /* WeekDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3148D0AB22FA26D600F91ABC /* WeekDay.swift */; };
+		3148D0B022FA63DA00F91ABC /* RepeatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3148D0AF22FA63DA00F91ABC /* RepeatTableViewCell.swift */; };
 		3153CE8122D858870075A593 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3153CE8022D858870075A593 /* AppDelegate.swift */; };
 		3153CE8822D858890075A593 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3153CE8722D858890075A593 /* Assets.xcassets */; };
 		3153CE8B22D858890075A593 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3153CE8922D858890075A593 /* LaunchScreen.storyboard */; };
@@ -17,7 +20,6 @@
 		3153CE9922D8597D0075A593 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 3153CE9822D8597D0075A593 /* .gitignore */; };
 		3153CE9C22D85AB90075A593 /* Routine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3153CE9B22D85AB90075A593 /* Routine.swift */; };
 		3153CE9E22D85ACE0075A593 /* SubRoutine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3153CE9D22D85ACE0075A593 /* SubRoutine.swift */; };
-		31899BBF22F7CDF100199ED2 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31899BBE22F7CDF100199ED2 /* Notification.swift */; };
 		3198698A22D9124700CE1582 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3198698922D9124700CE1582 /* Main.storyboard */; };
 		31A434CC22D9B4390092D1AE /* SubRoutineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A434CB22D9B4390092D1AE /* SubRoutineTableViewController.swift */; };
 		31A434D022D9B5480092D1AE /* RoutineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A434CF22D9B5480092D1AE /* RoutineTableViewCell.swift */; };
@@ -34,6 +36,9 @@
 		310BC6DC22EAD6050052405B /* IconCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCollectionViewCell.swift; sourceTree = "<group>"; };
 		314283CA22E6B07F0019694C /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 		314283CC22E6BFB40019694C /* DetailedRoutineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedRoutineViewController.swift; sourceTree = "<group>"; };
+		3148D0A922F9527900F91ABC /* RepeatTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RepeatTableViewController.swift; path = /Users/aicocom/Desktop/IOS/Routines/Routines/Controllers/RepeatTableViewController.swift; sourceTree = "<absolute>"; };
+		3148D0AB22FA26D600F91ABC /* WeekDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDay.swift; sourceTree = "<group>"; };
+		3148D0AF22FA63DA00F91ABC /* RepeatTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatTableViewCell.swift; sourceTree = "<group>"; };
 		3153CE7D22D858870075A593 /* Routines.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Routines.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3153CE8022D858870075A593 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3153CE8722D858890075A593 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -43,7 +48,6 @@
 		3153CE9822D8597D0075A593 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		3153CE9B22D85AB90075A593 /* Routine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routine.swift; sourceTree = "<group>"; };
 		3153CE9D22D85ACE0075A593 /* SubRoutine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubRoutine.swift; sourceTree = "<group>"; };
-		31899BBE22F7CDF100199ED2 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		3198698922D9124700CE1582 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		31A434CB22D9B4390092D1AE /* SubRoutineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SubRoutineTableViewController.swift; path = ../../../../Routines/Routines/Routines/Controllers/SubRoutineTableViewController.swift; sourceTree = "<group>"; };
 		31A434CF22D9B5480092D1AE /* RoutineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutineTableViewCell.swift; sourceTree = "<group>"; };
@@ -123,6 +127,7 @@
 				314283CC22E6BFB40019694C /* DetailedRoutineViewController.swift */,
 				3153CE9222D858F50075A593 /* RoutinesTableViewController.swift */,
 				31A434CB22D9B4390092D1AE /* SubRoutineTableViewController.swift */,
+				3148D0A922F9527900F91ABC /* RepeatTableViewController.swift */,
 				31899BBD22F4A34700199ED2 /* Extensions */,
 				31A434D522DD217B0092D1AE /* TableViewCells */,
 				310BC6DE22EAD6140052405B /* CollectionViewCells */,
@@ -159,8 +164,8 @@
 			isa = PBXGroup;
 			children = (
 				3153CE9B22D85AB90075A593 /* Routine.swift */,
-				31899BBE22F7CDF100199ED2 /* Notification.swift */,
 				3153CE9D22D85ACE0075A593 /* SubRoutine.swift */,
+				3148D0AB22FA26D600F91ABC /* WeekDay.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -182,6 +187,7 @@
 				31A434CF22D9B5480092D1AE /* RoutineTableViewCell.swift */,
 				31F0FF9E22DEB631005861EA /* DatePickerTableViewCell.swift */,
 				31F7011722DFD56100C913E7 /* SwitchTogglerTableViewCell.swift */,
+				3148D0AF22FA63DA00F91ABC /* RepeatTableViewCell.swift */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -320,14 +326,16 @@
 				3153CE9322D858F50075A593 /* RoutinesTableViewController.swift in Sources */,
 				310BC6DD22EAD6050052405B /* IconCollectionViewCell.swift in Sources */,
 				3153CE8122D858870075A593 /* AppDelegate.swift in Sources */,
+				3148D0B022FA63DA00F91ABC /* RepeatTableViewCell.swift in Sources */,
 				31A434D422DC21430092D1AE /* SubRoutineTableViewCell.swift in Sources */,
 				3153CE9C22D85AB90075A593 /* Routine.swift in Sources */,
 				31F7011822DFD56100C913E7 /* SwitchTogglerTableViewCell.swift in Sources */,
 				31CCE6DA22F3C7CC00B6023B /* UIImageExtension.swift in Sources */,
 				31A434D022D9B5480092D1AE /* RoutineTableViewCell.swift in Sources */,
 				3153CE9E22D85ACE0075A593 /* SubRoutine.swift in Sources */,
-				31899BBF22F7CDF100199ED2 /* Notification.swift in Sources */,
 				314283CB22E6B07F0019694C /* UIViewExtensions.swift in Sources */,
+				3148D0AC22FA26D600F91ABC /* WeekDay.swift in Sources */,
+				3148D0AA22F9527A00F91ABC /* RepeatTableViewController.swift in Sources */,
 				31CCE6DC22F40EB200B6023B /* UIViewControllerExtension.swift in Sources */,
 				31F0FF9F22DEB631005861EA /* DatePickerTableViewCell.swift in Sources */,
 			);
