@@ -13,6 +13,7 @@ class SubRoutineTableViewCell: UITableViewCell, UITextFieldDelegate {
     //MarK: - My variables
     var chkButton : (() -> Void)? = nil
     var doneInputting: (() -> Void)? = nil
+    var noLongerEditing: (() -> Void)? = nil
     
     
     //MARK: - IBOutlets
@@ -55,6 +56,13 @@ class SubRoutineTableViewCell: UITableViewCell, UITextFieldDelegate {
             doneInputting()
         }
         return true 
+    }
+    
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if let currentlyEditing = self.noLongerEditing{
+            currentlyEditing()
+        }
     }
     
     

@@ -145,7 +145,24 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         //For Calendar
         askUserForPermission()
         
-        // print("I work")
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        //update notification if changes are made to the name of the Routine
+        if let routine = selectedRoutine{
+            if let startTime = routine.startTime, let intervalTime = routine.timeForRoutine{
+                alertForRepeat()
+                do{
+                    try realm.write {
+                        createNotificationDays(with: routine.weekDayNotifications, startTime: startTime, intervalTime: intervalTime)
+                        print("Notification Updated")
+                    }
+                }
+                catch{
+                    print("Could not update Notifications")
+                }
+                
+            }
+        }
     }
     
     //MARK: - TableView Methods
@@ -553,6 +570,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
             else{
                 DispatchQueue.main.async {
                     self.needPermissionView.fadeIn()
+                    self.navigationController?.popViewController(animated: true)
                 }
             }
         }
@@ -617,8 +635,9 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         
         let content = UNMutableNotificationContent()
         content.title = routine.name
-        content.body = "Your \(content.title) routine is starting! This routine lasts for \(timeIntervalString) and has \(routine.numberOfTotalSubRoutines) tasks"
+        content.body = "Your \(content.title) routine is starting! This routine lasts for \(timeIntervalString)."
         content.sound = UNNotificationSound.default
+        
         
         
         var startComponents = NSCalendar.current.dateComponents(units, from: startTime)
@@ -669,6 +688,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
         
         
     }
+    
     
     //MARK: - Functions for saving images
     

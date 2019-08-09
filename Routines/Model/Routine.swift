@@ -22,6 +22,7 @@ class Routine: Object{
     @objc dynamic var partialImagePath: String?
     @objc dynamic var timeForRoutine: Date?
     @objc dynamic var startTime: Date?
+    @objc dynamic var baseDate: String?
     //@objc dynamic var notificationIdentifiers: [Int: String]?
     @objc dynamic var reminderSet = false
 

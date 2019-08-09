@@ -66,12 +66,12 @@ class RoutineTableViewCell: UITableViewCell {
     //MARK: - Customization of UI of Cell
     func customizeUIViewCell(){
         //rounded Corners
-        self.layer.cornerRadius = 20
-        self.layer.masksToBounds = true
+       // self.layer.cornerRadius = 20
+      //  self.layer.masksToBounds = true
         //self.layer.borderWidth = 1
         
-        cellBackground.layer.cornerRadius = 20
-        cellBackground.layer.masksToBounds = true
+       // cellBackground.layer.cornerRadius = 20
+       // cellBackground.layer.masksToBounds = true
         cellBackground.image = UIImage(named: "cellBackground5")
         
         let darkBlur = UIBlurEffect(style: .dark)

@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/aicocom/Desktop/IOS/Routines/Routines/Controllers/RepeatTableViewController.swift">
-   </FileRef>
-   <FileRef
       location = "group:Routines.xcodeproj">
    </FileRef>
    <FileRef

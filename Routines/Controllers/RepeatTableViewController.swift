@@ -1,10 +1,9 @@
 //
 //  RepeatTableViewController.swift
-//  
+//
 //
 //  Created by Adriany Cocom on 8/5/19.
 //
-
 import UIKit
 import RealmSwift
 
@@ -36,7 +35,7 @@ class RepeatTableViewController: UITableViewController {
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "dayCell", for: indexPath) 
+        let cell = tableView.dequeueReusableCell(withIdentifier: "dayCell", for: indexPath)
         
         if let weekDays = weekDays{
             let weekDay = weekDays[indexPath.row]

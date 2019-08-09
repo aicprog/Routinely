@@ -24,6 +24,7 @@ class RoutinesTableViewController: UITableViewController {
     
     @IBOutlet weak var addTxtField: UITextField!
     
+    @IBOutlet weak var wallpaperButton: UIBarButtonItem!
     
     //MARK: - View Methods
     override func viewDidLoad() {
@@ -123,6 +124,7 @@ class RoutinesTableViewController: UITableViewController {
         if segue.identifier == "goToSubRoutines"{
             let destinationVC = segue.destination as! SubRoutineTableViewController
             
+            self.navigationItem.backBarButtonItem?.title = "Back"
             if let indexPath = tableView.indexPathForSelectedRow{
                 destinationVC.selectedRoutine = routines?[indexPath.row]
                 tableView.deselectRow(at: indexPath, animated: true)
@@ -130,6 +132,7 @@ class RoutinesTableViewController: UITableViewController {
         }
         else if segue.identifier == "goToRoutineDetails"{
             let destinationVC = segue.destination as! DetailedRoutineViewController
+            self.navigationItem.backBarButtonItem?.title = "Cancel"
             //print(tableView.indexPath(for: sender as! RoutineTableViewCell)!)
             if let indexPath = sender as? IndexPath{
                 destinationVC.selectedRoutine = routines?[indexPath.row]
