@@ -9,8 +9,14 @@
 import UIKit
 import RealmSwift
 import EventKit
+import UserNotifications
 
-class RoutinesTableViewController: UITableViewController {
+//MARK: - My protocols
+protocol WallpaperDelegate {
+    func passBackBackgroundImage(image: UIImage) -> ()
+}
+
+class RoutinesTableViewController: UITableViewController, WallpaperDelegate {
     
     //MARK: - My Variables
     
@@ -18,7 +24,8 @@ class RoutinesTableViewController: UITableViewController {
     var routines: Results<Routine>?
     var activityIndicator = UIActivityIndicatorView()
     let defaultImageName = "icon0"
-    // let cellSpacingHeight: CGFloat = 100
+    let defaultBackgroundImage = UIImage(named: "background3")
+    
     //MARK: - IBoutlets
     
     
@@ -37,10 +44,11 @@ class RoutinesTableViewController: UITableViewController {
         
         
         //For background image of cell
-        let backgroundImage = UIImage(named: "cellBackground3")
-        let imageView = UIImageView(image: backgroundImage)
-        imageView.contentMode = .scaleAspectFill
-        self.tableView.backgroundView = imageView
+        if let image = defaultBackgroundImage{
+            setBackgroundImage(image: image)
+        }
+        
+     
         
         
         //load text field
@@ -142,6 +150,11 @@ class RoutinesTableViewController: UITableViewController {
             let popVC = destinationVC.popoverPresentationController
             popVC?.delegate = self
         }
+        else if segue.identifier == "goToWallpapers"{
+            let destinationVC = segue.destination as! BackgroundImageViewController
+            destinationVC.delegate = self
+                
+        }
         
         // override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         //            if let adpostVC = segue.destinationViewController as? XXXController {
@@ -153,13 +166,14 @@ class RoutinesTableViewController: UITableViewController {
     
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        activityIndicator.center = self.view.center
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.style = UIActivityIndicatorView.Style.gray
-        view.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
+//        activityIndicator.center = self.view.center
+//        activityIndicator.hidesWhenStopped = true
+//        activityIndicator.style = UIActivityIndicatorView.Style.gray
+//        view.addSubview(activityIndicator)
+//        activityIndicator.startAnimating()
+        self.showSpinner(onView: self.tableView)
         performSegue(withIdentifier: "goToRoutineDetails", sender: indexPath)
-        activityIndicator.stopAnimating()
+        //activityIndicator.stopAnimating()
         
     }
     
@@ -176,6 +190,12 @@ class RoutinesTableViewController: UITableViewController {
         if let itemToBeDeleted = routines?[indexPath.row]{
             do{
                 try realm.write {
+                    //delete all notifications
+                    for day in itemToBeDeleted.weekDayNotifications{
+                        if let path = day.notificationPath{
+                            deleteNotification(with: path )
+                        }
+                    }
                     realm.delete(itemToBeDeleted)
                     tableView.reloadData()
                 }
@@ -262,6 +282,25 @@ class RoutinesTableViewController: UITableViewController {
         }
     }
     
+    func setBackgroundImage(image: UIImage){
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFill
+        self.tableView.backgroundView = imageView
+    }
+    
+    //MARK: - Conforming to backgroundImageProtocol
+    func passBackBackgroundImage(image: UIImage) {
+        setBackgroundImage(image: image)
+    }
+    
+    func deleteNotification(with notificationIdentifier: String){
+        print("Identifier to be deleted: \(notificationIdentifier)")
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        
+        
+    }
+    
     
 }
 
@@ -318,4 +357,5 @@ extension RoutinesTableViewController: UIPopoverPresentationControllerDelegate {
         return UINavigationController(rootViewController: controller.presentedViewController)
     }
 }
+
 

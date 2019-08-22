@@ -78,6 +78,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
     
     
     override func viewDidLoad() {
+        self.removeSpinner()
         super.viewDidLoad()
         tableView.rowHeight = 40
         
@@ -570,7 +571,7 @@ class DetailedRoutineViewController: UIViewController, UITableViewDelegate, UITa
             else{
                 DispatchQueue.main.async {
                     self.needPermissionView.fadeIn()
-                    self.navigationController?.popViewController(animated: true)
+                   // self.navigationController?.popViewController(animated: true)
                 }
             }
         }
@@ -747,8 +748,6 @@ extension DetailedRoutineViewController: UNUserNotificationCenterDelegate{
     
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        
-        
     }
     
     
@@ -788,7 +787,7 @@ extension DetailedRoutineViewController: UICollectionViewDelegate, UICollectionV
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        print(indexPath.item)
+        
         let image = icons[indexPath.item]
         //update selected image
         selectedImageView.image = image
@@ -1180,6 +1179,44 @@ extension DetailedRoutineViewController: UIImagePickerControllerDelegate, UINavi
 //
 //    }
 //
+
+////MARK: - Search Bar Methods
+//extension SubRoutineTableViewController: UISearchBarDelegate{
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//
+//
+//
+//        //add predicate
+//        if let searchedText = searchBar.text {
+//            //let filteredPredicate = NSPredicate(format: "name CONTAINS[cd] %@", searchedText)
+//            //add formatting
+//            //toDoItems = toDoItems?.filter(filteredPredicate).sorted(byKeyPath: "name", ascending: true)
+//
+//            subRoutines = subRoutines?.filter("name CONTAINS[cd] %@", searchedText).sorted(byKeyPath: "name", ascending: true)
+//            tableView.reloadData()
+//
+//        }
+//
+//        //try fetch
+//
+//    }
+//
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        if searchBar.text?.count == 0{
+//            //Since it has no predicate, then loadData()'s predicate will only have categoryPredicate
+//            loadSubRoutines()
+//
+//            //Since it is the userInterface, make sure it is a prioirity while loadData() happens in the background
+//            DispatchQueue.main.async {
+//                searchBar.resignFirstResponder()
+//            }
+//
+//        }
+//
+//
+//    }
+//
+//}
 
 
 

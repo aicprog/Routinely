@@ -25,6 +25,7 @@ class SubRoutineTableViewController: UITableViewController {
         }
     }
     
+    
     //MARK: IB Outlets
     @IBOutlet weak var addTxtField: UITextField!
     
@@ -37,8 +38,18 @@ class SubRoutineTableViewController: UITableViewController {
         // Use the edit button item provided by the table view controller.
         navigationItem.rightBarButtonItem = editButtonItem
         initializeAddTxtFieldUI()
+    
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
-        
+
+    
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        addTxtField.resignFirstResponder()
     }
     
     
@@ -57,6 +68,7 @@ class SubRoutineTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "subRoutineCell", for: indexPath) as! SubRoutineTableViewCell
         
         if let subRoutine = subRoutines?[indexPath.row], let routine = selectedRoutine{
+
             
             let attributedString = NSMutableAttributedString(string: subRoutine.name)
             attributedString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSMakeRange(0, attributedString.length))
@@ -68,10 +80,12 @@ class SubRoutineTableViewController: UITableViewController {
             
             //update completed tasks
             cell.chkButton = {
+                cell.nameTxtField.isHidden = true
+                cell.nameLabel.isHidden = false
                 do{
                     try self.realm.write{
                         subRoutine.completed = !subRoutine.completed
-                        
+
                         //update # of completed tasks
                         guard let allSubRoutines = self.subRoutines else {fatalError()}
                         routine.numberOfCompletedSubRoutines = allSubRoutines.filter("completed == %@", true).count
@@ -88,6 +102,7 @@ class SubRoutineTableViewController: UITableViewController {
                 cell.nameTxtField.resignFirstResponder()
                 cell.nameTxtField.isHidden = true
                 cell.nameLabel.isHidden = false
+                
                 let name = cell.nameTxtField.text ?? "New Item"
                 
                 let attributedString = NSMutableAttributedString(string: name)
@@ -131,11 +146,39 @@ class SubRoutineTableViewController: UITableViewController {
         
     }
     
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+        if let subRoutines = subRoutines{
+            try! realm.write {
+                let sourceObject = subRoutines[sourceIndexPath.row]
+                let destinationObject = subRoutines[destinationIndexPath.row]
+                
+                let destinationObjectOrder = destinationObject.order
+                
+                if sourceIndexPath.row < destinationIndexPath.row {
+                    
+                    for index in sourceIndexPath.row...destinationIndexPath.row {
+                        let object = subRoutines[index]
+                        object.order -= 1
+                    }
+                } else {
+                    
+                    for index in (destinationIndexPath.row..<sourceIndexPath.row).reversed() {
+                        let object = subRoutines[index]
+                        object.order += 1
+                    }
+                }
+                sourceObject.order = destinationObjectOrder
+            }
+        }
+    }
+    
     
     //MARK: - Data Manipulation
     
     func loadSubRoutines(){
-        subRoutines = selectedRoutine?.subRoutines.sorted(byKeyPath: "name", ascending: true)
+        subRoutines = selectedRoutine?.subRoutines.sorted(byKeyPath: "order", ascending: true)
+  
         tableView.reloadData()
         
     }
@@ -160,31 +203,7 @@ class SubRoutineTableViewController: UITableViewController {
         return true
     }
 
-    //MARK: - IBActions
-    @IBAction func checkButtonPressed(_ sender: UIButton) {
-        
-        if let indexPath = tableView.indexPathForSelectedRow{
-            guard let subRoutine = subRoutines?[indexPath.row] else {fatalError()}
-            guard let routine = selectedRoutine else {fatalError()}
-            do{
-                try realm.write{
-                    print("I work")
-                    subRoutine.completed = !subRoutine.completed
-                    
-                    //update # of completed tasks
-                    guard let allSubRoutines = subRoutines else {fatalError()}
-                    routine.numberOfCompletedSubRoutines = allSubRoutines.filter("completed == %@", true).count
-                    tableView.reloadData()
-                }
-            }catch{
-                print("Error saving done status, \(error)")
-            }
-            
-        }
-        
-        
-        
-    }
+   
     
     //MARK: - My Functions
     func initializeAddTxtFieldUI(){
@@ -208,24 +227,17 @@ class SubRoutineTableViewController: UITableViewController {
         addTxtField.attributedPlaceholder = placeHolder
     }
     
+    //hides nameTxtField when keyboard resigns
+    @objc func keyboardWillHide(_ notification: NSNotification){
+        if let indexPath = tableView.indexPathForSelectedRow{
+            let cell = tableView.cellForRow(at: indexPath) as! SubRoutineTableViewCell
+            cell.nameTxtField.isHidden = true
+            cell.nameLabel.isHidden = false
+        }
+        
+    }
     
-    //    func textFieldDidEndEditing(_ textField: UITextField) {
-    //        resignFirstResponder()
-    //
-    //        if let indexPath = tableView.indexPathForSelectedRow{
-    //            let cell = tableView.cellForRow(at: indexPath) as! SubRoutineTableViewCell
-    //            cell.nameTxtField.isHidden = true
-    //            cell.nameLabel.isHidden = false
-    //
-    //
-    //            let name = cell.nameTxtField.text ?? "New Item"
-    //
-    //            let attributedString = NSMutableAttributedString(string: name)
-    //            attributedString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSMakeRange(0, attributedString.length))
-    //
-    //            cell.nameLabel.text = cell.nameTxtField.text
-    //            // cell.nameLabel.attributedText = subRoutine.completed ? attributedString: NSMutableAttributedString(string: name)
-    //    }
+    
     
 }
 
@@ -259,48 +271,15 @@ extension SubRoutineTableViewController: UITextFieldDelegate{
         }
     }
     
+    
     func setLeftPaddingPoints(_ amount:CGFloat){
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: addTxtField.frame.size.height))
         addTxtField.leftView = paddingView
         addTxtField.leftViewMode = .always
     }
+    
+    
+
 }
 
-////MARK: - Search Bar Methods
-//extension SubRoutineTableViewController: UISearchBarDelegate{
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//
-//
-//
-//        //add predicate
-//        if let searchedText = searchBar.text {
-//            //let filteredPredicate = NSPredicate(format: "name CONTAINS[cd] %@", searchedText)
-//            //add formatting
-//            //toDoItems = toDoItems?.filter(filteredPredicate).sorted(byKeyPath: "name", ascending: true)
-//
-//            subRoutines = subRoutines?.filter("name CONTAINS[cd] %@", searchedText).sorted(byKeyPath: "name", ascending: true)
-//            tableView.reloadData()
-//
-//        }
-//
-//        //try fetch
-//
-//    }
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchBar.text?.count == 0{
-//            //Since it has no predicate, then loadData()'s predicate will only have categoryPredicate
-//            loadSubRoutines()
-//
-//            //Since it is the userInterface, make sure it is a prioirity while loadData() happens in the background
-//            DispatchQueue.main.async {
-//                searchBar.resignFirstResponder()
-//            }
-//
-//        }
-//
-//
-//    }
-//
-//}
 

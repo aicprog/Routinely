@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+
 extension UIView {
 	func fadeIn(_ duration: TimeInterval = 1.0, delay: TimeInterval = 0.0, completion: @escaping ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
         UIView.animate(withDuration: duration, delay: delay, options: UIView.AnimationOptions.curveEaseIn, animations: {
@@ -48,4 +49,8 @@ extension UIView {
         }
         
     }
+
+    
 }
+
+
