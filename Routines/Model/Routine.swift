@@ -22,24 +22,19 @@ class Routine: Object{
     @objc dynamic var partialImagePath: String?
     @objc dynamic var timeForRoutine: Date?
     @objc dynamic var startTime: Date?
-    @objc dynamic var baseDate: String?
-    //@objc dynamic var notificationIdentifiers: [Int: String]?
+    @objc dynamic var baseDate: Date?
+    
     @objc dynamic var reminderSet = false
 
 
     
     
     let subRoutines = List<SubRoutine>()
-    //let notifications = List<Notification>()
+    
     
     var weekDayNotifications = List<WeekDay>()
     
-    //let reminders = List<Reminder>()
-    
-    //@objc dynamic var color: String = UIColor.randomFlat.hexValue()
-    //@objc dynamic var information?
-    //@objc dynamic var timeAllotted?
-    //@objc dynamic  var numOfTaks?
+
     
     
 }

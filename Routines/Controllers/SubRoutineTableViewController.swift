@@ -42,6 +42,7 @@ class SubRoutineTableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        updateSubRoutineCheckedList()
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
 
@@ -130,7 +131,7 @@ class SubRoutineTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //deselect
-        //tableView.deselectRow(at: indexPath, animated: false)
+        
         let cell = tableView.cellForRow(at: indexPath) as! SubRoutineTableViewCell
         cell.nameLabel.isHidden = true
         cell.nameTxtField.isHidden = false
@@ -235,6 +236,51 @@ class SubRoutineTableViewController: UITableViewController {
             cell.nameLabel.isHidden = false
         }
         
+    }
+    //update checked list
+    func updateSubRoutineCheckedList(){
+        if let routine = selectedRoutine{
+            if let baseDate = routine.baseDate{
+                updateBaseDate(baseDate: baseDate, routine: routine)
+            }
+                // initialize baseDate
+            else{
+                do{
+                    try self.realm.write {
+                        routine.baseDate = getDate(from: Date())
+                    }
+                }
+                catch{
+                    print("There was an error updating routines \(error)")
+                }
+            }
+        }
+    }
+    
+    func getDate(from originalDate: Date) -> Date {
+        let components = Calendar.current.dateComponents([.year, .month, .day], from: originalDate)
+        let date = Calendar.current.date(from: components)
+        return date!
+    }
+    
+    func updateBaseDate(baseDate: Date, routine: Routine){
+        if baseDate != getDate(from: Date()){
+            do{
+                try self.realm.write {
+                    for subRoutine in routine.subRoutines{
+                        if subRoutine.completed{
+                            subRoutine.completed = false
+                            routine.numberOfCompletedSubRoutines -= 1
+                        
+                        }
+                    }
+                    
+                }
+            }
+            catch{
+                print("There was an error updating the subRoutines \(error)")
+            }
+        }
     }
     
     

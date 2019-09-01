@@ -15,7 +15,7 @@ class WeekDay: Object{
     @objc dynamic var number = -1
     @objc dynamic var notificationPath: String?
     
-    //let subRoutines = List<SubRoutine>()
+
     var parentRoutine = LinkingObjects(fromType: Routine.self, property: "weekDayNotifications")
     
     

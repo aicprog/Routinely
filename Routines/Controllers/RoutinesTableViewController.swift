@@ -111,6 +111,10 @@ class RoutinesTableViewController: UITableViewController, WallpaperDelegate {
                 cell.timeDifference.text = ""
             }
             
+            cell.goToDetails = {
+                 self.performSegue(withIdentifier: "goToRoutineDetails", sender: indexPath)
+            }
+            
             
         }
         
@@ -156,26 +160,9 @@ class RoutinesTableViewController: UITableViewController, WallpaperDelegate {
                 
         }
         
-        // override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        //            if let adpostVC = segue.destinationViewController as? XXXController {
-        //                let popPC = adpostVC.popoverPresentationController
-        //                popPC?.delegate = self
     }
     
-    
-    
-    
-    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-//        activityIndicator.center = self.view.center
-//        activityIndicator.hidesWhenStopped = true
-//        activityIndicator.style = UIActivityIndicatorView.Style.gray
-//        view.addSubview(activityIndicator)
-//        activityIndicator.startAnimating()
-        self.showSpinner(onView: self.tableView)
-        performSegue(withIdentifier: "goToRoutineDetails", sender: indexPath)
-        //activityIndicator.stopAnimating()
-        
-    }
+
     
     
     
@@ -205,6 +192,10 @@ class RoutinesTableViewController: UITableViewController, WallpaperDelegate {
             }
         }
         return true
+    }
+    
+    func createBaseDate(date: Date){
+        
     }
     
     
@@ -324,7 +315,7 @@ extension RoutinesTableViewController: UITextFieldDelegate{
                         newRoutine.name = name
                         newRoutine.partialImagePath = nil
                         realm.add(newRoutine)
-                        //self.selectedRoutine?.numberOfTotalSubRoutines += 1
+                
                         addTxtField.text = ""
                     }
                 }

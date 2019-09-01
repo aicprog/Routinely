@@ -53,7 +53,7 @@ class RepeatTableViewController: UITableViewController {
             
             do{
                 try realm.write{
-                    //realm.delete(item)
+                    
                     weekDay.checked = !weekDay.checked
                 }
             }catch{

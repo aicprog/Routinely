@@ -31,15 +31,7 @@ class BackgroundImageViewController: UIViewController  {
         UIImage(named: "background13")!,
         UIImage(named: "background14")!,
         UIImage(named: "background15")!
-        //UIImage(named: "background16")!
-//        UIImage(named: "background17")!,
-//        UIImage(named: "background18")!,
-//        UIImage(named: "background19")!,
-//        UIImage(named: "background20")!,
-//        UIImage(named: "background21")!,
-//        UIImage(named: "background22")!,
-//        UIImage(named: "background23")!,
-//        UIImage(named: "background24")!,
+
         ]
 
     override func viewDidLoad() {
@@ -92,7 +84,7 @@ extension BackgroundImageViewController: UICollectionViewDelegate, UICollectionV
         let cell = collectionView.cellForItem(at: indexPath) as! BackgroundImageCollectionViewCell
         cell.layer.borderWidth = 5.0
         cell.layer.borderColor = UIColor.orange.cgColor
-        //cell?.backgroundIm
+        
         
         
         let image = backgrounds[indexPath.item]
@@ -103,7 +95,7 @@ extension BackgroundImageViewController: UICollectionViewDelegate, UICollectionV
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! BackgroundImageCollectionViewCell
         cell.layer.borderWidth = 0
-        //cell.backgroundImage.layer.backgroundColor = UIColor.white.cgColor
+       
         
     }
 }

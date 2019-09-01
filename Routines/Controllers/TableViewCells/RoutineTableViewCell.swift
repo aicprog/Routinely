@@ -24,11 +24,8 @@ class RoutineTableViewCell: UITableViewCell {
     @IBOutlet weak var timeDifference: UILabel!
     //MARK: - My variables
     let defaultImageName = "icon0"
-//    @IBOutlet weak var cellBackground: UIImageView!{
-//        didSet{
-//            blurImage()
-//        }
-//    }
+
+    var goToDetails: (() -> Void)? = nil
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -37,7 +34,9 @@ class RoutineTableViewCell: UITableViewCell {
         initializeImageProperties()
         
         //customize UIView Cell
-       customizeUIViewCell()
+        customizeUIViewCell()
+        
+       
 
     }
     
@@ -47,31 +46,11 @@ class RoutineTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    
-//    func blurImage(){
-//        
-//        cellBackground.image = UIImage(named: "cellBackground5")
-//
-//        let darkBlur = UIBlurEffect(style: .dark)
-//        // 2
-//        let blurView = UIVisualEffectView(effect: darkBlur)
-//        
-//        blurView.frame = cellBackground!.bounds
-//        // 3
-//        cellBackground?.addSubview(blurView)
-//        cellBackground.alpha = CGFloat(0.7)
-//        
-//    }
+
 
     //MARK: - Customization of UI of Cell
     func customizeUIViewCell(){
-        //rounded Corners
-       // self.layer.cornerRadius = 20
-      //  self.layer.masksToBounds = true
-        //self.layer.borderWidth = 1
-        
-       // cellBackground.layer.cornerRadius = 20
-       // cellBackground.layer.masksToBounds = true
+ 
         cellBackground.image = UIImage(named: "cellBackground5")
         
         let darkBlur = UIBlurEffect(style: .dark)
@@ -83,7 +62,7 @@ class RoutineTableViewCell: UITableViewCell {
         cellBackground?.addSubview(blurView)
         cellBackground.alpha = CGFloat(0.7)
         
-        self.accessoryType = .detailButton
+        //self.accessoryType = .detailButton
         
         
     //spacing inbetween cells
@@ -119,6 +98,12 @@ class RoutineTableViewCell: UITableViewCell {
     
     
     
+    @IBAction func detailButtonPressed(_ sender: UIButton) {
+        if let goToDetails = self.goToDetails
+        {
+            goToDetails()
+        }
+    }
     
 
 
