@@ -8,6 +8,8 @@ Routinely is an IOS application made for organizing one's routines. Users can:
 
 Routines is the perfect tool to organize your routines and live productively!
 
+Routinely Demo: https://youtu.be/OWuXejOAQsc
+
 
 
 
